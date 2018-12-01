@@ -52,12 +52,15 @@ public class QueryFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         jTextField1 = new javax.swing.JTextField();
+        jTextField1.setText("mm_sttest2b");
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea2 = new javax.swing.JTextArea();
         jTextField2 = new javax.swing.JTextField();
+        jTextField2.setText("cssql.seattleu.edu");
         jTextField3 = new javax.swing.JTextField();
+        jTextField3.setText("mm_sttest2b");
         jPanel1 = new javax.swing.JPanel();
         jTextField5 = new javax.swing.JTextField();
         jTextField6 = new javax.swing.JTextField();
@@ -204,7 +207,7 @@ public class QueryFrame extends javax.swing.JFrame {
         });
         getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 190, -1, -1));
 
-        jPasswordField1.setText("jPasswordField1");
+        jPasswordField1.setText("mm_sttest2bPass");
         jPasswordField1.setNextFocusableComponent(jTextField1);
         getContentPane().add(jPasswordField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 110, 120, -1));
 
