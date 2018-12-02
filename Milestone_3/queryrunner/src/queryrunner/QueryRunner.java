@@ -7,7 +7,9 @@ package queryrunner;
 
 // Eric was here
 
+
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * 
@@ -237,7 +239,77 @@ public class QueryRunner {
                 // functions directly, you can choose to do that. It will be harder, but that is your option.
                 // NOTE - You can look at the QueryRunner API calls that are in QueryFrame.java for assistance. You should not have to 
                 //    alter any code in QueryJDBC, QueryData, or QueryFrame to make this work.
-                System.out.println("Please write the non-gui functionality");
+
+            	
+            	System.out.print("Please enter the Host Name: ");
+            	Scanner input = new Scanner(System.in);
+            	String hostName = input.nextLine();
+            	System.out.print("Please enter the User Name: ");
+            	String username = input.nextLine();
+            	System.out.print("Please enter the Password Name: ");
+            	String password = input.nextLine();
+            	System.out.print("Please enter the Database Name: ");
+            	String database = input.nextLine();
+            	
+            	hostName = "cssql.seattleu.edu";
+            	username = "mm_sttest2b";
+            	password = "mm_sttest2bPass";
+            	database = "mm_sttest2b";
+            	
+            	boolean validate = queryrunner.Connect(hostName, username, password, database);
+            	
+            	if (validate) {
+            		
+            		System.out.println("You are loged in!\n");
+            	}
+            	else {
+            		String error = queryrunner.GetError();
+            		System.out.print("Returned an error " + error);
+            		return;
+            		//System.out.println("Do you want to try again? ");
+            		
+            	}
+            	
+            	int n = queryrunner.GetTotalQueries();
+            	for (int i =0; i<n; i++) {
+            		String [] parmArray={};
+            		boolean isParameterQuery = queryrunner.isParameterQuery(i);
+            		if (queryrunner.isParameterQuery(i)) {
+            			//System.out.println("Parameter Query: ");
+            			int paramAmount = queryrunner.GetParameterAmtForQuery(i);
+            			parmArray = new String[paramAmount];
+            			for (int k = 0; k < paramAmount ; k++) {
+            				System.out.print(queryrunner.GetParamText(i, k) + ": ");
+            				String parmval = input.nextLine();
+            				parmArray[k] = parmval;
+            			}
+            			
+            		}else {
+            			System.out.println("This is a non paramter query" );
+            			boolean execute;
+            			execute = queryrunner.ExecuteQuery(i, parmArray);
+            			if (execute) {
+            				String data[][] = queryrunner.GetQueryData();
+            				System.out.println("The query worked");
+            			}
+            			else {
+            				
+            			}
+            		}
+            	}
+            	
+            	
+            	System.out.println();
+            	validate = queryrunner.Disconnect();
+            	if (validate) {
+            		System.out.println("You have disconnected from " + database);
+            	}else {
+            		String error = queryrunner.GetError();
+            		System.out.print("Returned an error " + error);
+            		return;
+            	}
+            	
+            	
             }
             else
             {
