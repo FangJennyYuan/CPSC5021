@@ -45,12 +45,23 @@ public class QueryRunner {
         //    IsItActionQuery (e.g. Mark it true if it is, otherwise false)
         //    IsItParameterQuery (e.g.Mark it true if it is, otherwise false)
         
-        m_queryArray.add(new QueryData("INSERT INTO Customer(Customer_Name, Customer_Phone_Number, Customer_Email)\n" + 
-        							   "VALUES (?,?,?);", new String[] {"Customer_Name", "Customer_Phone_Number", "Customer_Email"}, null, true, true)); // Eric testing
-        m_queryArray.add(new QueryData("Select * from contact", null, null, false, false));   // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
-        m_queryArray.add(new QueryData("Select * from contact where contact_id=?", new String [] {"CONTACT_ID"}, new boolean [] {false},  false, true));        // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
-        m_queryArray.add(new QueryData("Select * from contact where contact_name like ?", new String [] {"CONTACT_NAME"}, new boolean [] {true}, false, true));        // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
-        m_queryArray.add(new QueryData("insert into contact (contact_id, contact_name, contact_salary) values (?,?,?)",new String [] {"CONTACT_ID", "CONTACT_NAME", "CONTACT_SALARY"}, new boolean [] {false, false, false}, true, true));// THIS NEEDS TO CHANGE FOR YOUR APPLICATION
+        m_queryArray.add(new QueryData("Select e.Employee_Last_Name as Last, \n" + 
+        								"e.Employee_First_Name as First, \r\n" + 
+        								"SUM((UNIX_TIMESTAMP(es.Clock_out) - UNIX_TIMESTAMP(es.Clock_in)) / 3600.0) as Hours \r\n" + 
+						        		"FROM Employee e\r\n" + 
+						        		"JOIN Employee_Schedule es\r\n" + 
+						        		"ON e.Employee_ID = es.Employee_ID\r\n" + 
+						        		"JOIN Employee_Role er\r\n" + 
+						        		"ON e.Employee_ID = er.Employee_ID\r\n" + 
+						        		"WHERE es.Restaurant_Schedule_ID = 14\r\n" + 
+						        		"GROUP BY e.Employee_ID", null, null, false, false));   // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
+        
+        //m_queryArray.add(new QueryData("INSERT INTO Customer(Customer_Name, Customer_Phone_Number, Customer_Email)\n" + 
+		//		   "VALUES (?,?,?);", new String[] {"Customer_Name", "Customer_Phone_Number", "Customer_Email"}, null, true, true)); // Eric testing
+        
+        //m_queryArray.add(new QueryData("Select * from contact where contact_id=?", new String [] {"CONTACT_ID"}, new boolean [] {false},  false, true));        // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
+        //m_queryArray.add(new QueryData("Select * from contact where contact_name like ?", new String [] {"CONTACT_NAME"}, new boolean [] {true}, false, true));        // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
+        //m_queryArray.add(new QueryData("insert into contact (contact_id, contact_name, contact_salary) values (?,?,?)",new String [] {"CONTACT_ID", "CONTACT_NAME", "CONTACT_SALARY"}, new boolean [] {false, false, false}, true, true));// THIS NEEDS TO CHANGE FOR YOUR APPLICATION
                        
     }
        
@@ -199,7 +210,7 @@ public class QueryRunner {
         }
         else
         {
-            if (args[0] == "-console")
+            if (args[0].equals("-console"))
             {
                 // TODO 
                 // You should code the following functionality:
@@ -252,10 +263,18 @@ public class QueryRunner {
             	System.out.print("Please enter the Database Name: ");
             	String database = input.nextLine();
             	
+            	
             	hostName = "cssql.seattleu.edu";
             	username = "mm_sttest2b";
             	password = "mm_sttest2bPass";
             	database = "mm_sttest2b";
+				
+            	/*
+            	hostName = "127.0.0.1";
+            	username = "test";
+            	password = "test";
+            	database = "mm_sttest2b";
+            	*/
             	
             	boolean validate = queryrunner.Connect(hostName, username, password, database);
             	
@@ -284,21 +303,39 @@ public class QueryRunner {
             				String parmval = input.nextLine();
             				parmArray[k] = parmval;
             			}
-            			
+            			boolean execute;
+            			execute = queryrunner.ExecuteQuery(i, parmArray);
             		}else {
             			System.out.println("This is a non paramter query" );
             			boolean execute;
             			execute = queryrunner.ExecuteQuery(i, parmArray);
             			if (execute) {
+            				String dataHeader[] = queryrunner.GetQueryHeaders();
             				String data[][] = queryrunner.GetQueryData();
-            				System.out.println("The query worked");
+            				System.out.println("The result of Query " + (i+1) + ": ");
+            				
+            				for (int j=0; j<dataHeader.length; j++) {
+            					System.out.printf("%-20s", dataHeader[j]);
+            				}
+            				
+            				System.out.println();
+            				
+            				for (int row=0; row<data.length; row++) {
+            					for (int col=0; col<dataHeader.length; col++) {
+            						System.out.printf("%-20s", data[row][col]);
+            					}
+            					System.out.println();
+            				}
+            				
+            				System.out.println();
             			}
             			else {
+            				String error = queryrunner.GetError();
+                    		System.out.print("Returned an error " + error);
             				
             			}
             		}
             	}
-            	
             	
             	System.out.println();
             	validate = queryrunner.Disconnect();
@@ -320,4 +357,3 @@ public class QueryRunner {
 
     }    
 }
-
