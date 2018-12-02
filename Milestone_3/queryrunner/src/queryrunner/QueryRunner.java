@@ -5,7 +5,7 @@
  */
 package queryrunner;
 
-// TODO delete this message.... Celeste was here
+// Eric was here
 
 import java.util.ArrayList;
 
