@@ -402,7 +402,9 @@ public class QueryFrame extends javax.swing.JFrame {
        allData = m_queryrunner.GetQueryData();  
        try
        {
-          QueryWriter.writeToCSV(headers, allData);
+          String csvFilename = QueryWriter.writeToCSV(headers, allData);
+          jTextArea2.setText("Query results have been exported to CSV file:\n"
+                + csvFilename);
        } catch (FileNotFoundException e)
        {
           System.err.println("Error writing file");
