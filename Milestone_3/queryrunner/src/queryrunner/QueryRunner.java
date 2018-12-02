@@ -76,7 +76,7 @@ public class QueryRunner {
         
         // Update table to indicate order is completed and table is now open:
         m_queryArray.add(new QueryData (UPDATE_TABLE, new String [] 
-              {"Table_Number"}, new boolean[] {true},  true, true)); //TODO is there a way to display that the query was successfully run?
+              {"Table_Number"}, new boolean[] {false},  false, true));
         /*
             Note: test with table 10. After testing, use this script to reset 
             values (so table 10 can be used for testing again):

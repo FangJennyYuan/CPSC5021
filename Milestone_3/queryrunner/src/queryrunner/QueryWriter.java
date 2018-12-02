@@ -6,8 +6,22 @@ public class QueryWriter
    public static void writeToCSV(String filename, String[] header, 
          String[][] results) throws FileNotFoundException
    {
-      File queryCSV = new File(filename);
-      PrintWriter outputFile = new PrintWriter(queryCSV);
+      File file;
+      boolean uniqueFilename = true;
+      do
+      {
+         // Check if file already exists
+         file = new File(filename);
+         if (file.exists())
+         {
+            // If so, update filename so as not to overwrite existing file
+            filename = MARKER + filename;
+            uniqueFilename = false;
+         }
+         else
+            uniqueFilename = true;
+      } while (!uniqueFilename);
+      PrintWriter outputFile = new PrintWriter(file);
       
       // Print column headers
       for (int i = 0; i < header.length; i++)
@@ -38,4 +52,5 @@ public class QueryWriter
    
    private static final String DELIMITER = ",";
    private static final String DEFAULT_CSV_FILENAME = "query.csv";
+   private static final String MARKER = "-";
 }
