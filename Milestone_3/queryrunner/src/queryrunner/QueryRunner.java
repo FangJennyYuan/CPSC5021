@@ -27,7 +27,7 @@ public class QueryRunner {
         m_updateAmount = 0;
         m_queryArray = new ArrayList<>();
         m_error="";
-    
+        
         
         // TODO - You will need to change the queries below to match your queries.
         
@@ -54,10 +54,11 @@ public class QueryRunner {
 						        		"JOIN Employee_Role er\r\n" + 
 						        		"ON e.Employee_ID = er.Employee_ID\r\n" + 
 						        		"WHERE es.Restaurant_Schedule_ID = 14\r\n" + 
-						        		"GROUP BY e.Employee_ID", null, null, false, false));   // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
+						        		"GROUP BY e.Employee_ID", null, null, false, false));   // Query 13
+        m_queryArray.add(new QueryData("call mm_sttest2b.Receipts(?)",new String [] {"TABLE_ID"}, new boolean [] {false}, false, true));   // Receipt Procedure 
         
-        //m_queryArray.add(new QueryData("INSERT INTO Customer(Customer_Name, Customer_Phone_Number, Customer_Email)\n" + 
-		//		   "VALUES (?,?,?);", new String[] {"Customer_Name", "Customer_Phone_Number", "Customer_Email"}, null, true, true)); // Eric testing
+        m_queryArray.add(new QueryData("INSERT INTO Customer(Customer_Name, Customer_Phone_Number, Customer_Email)\n" + 
+				   "VALUES (?,?,?);", new String[] {"Customer_Name", "Customer_Phone_Number", "Customer_Email"}, null, true, true)); // Eric testing
         
         //m_queryArray.add(new QueryData("Select * from contact where contact_id=?", new String [] {"CONTACT_ID"}, new boolean [] {false},  false, true));        // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
         //m_queryArray.add(new QueryData("Select * from contact where contact_name like ?", new String [] {"CONTACT_NAME"}, new boolean [] {true}, false, true));        // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
@@ -294,22 +295,32 @@ public class QueryRunner {
             	for (int i =0; i<n; i++) {
             		String [] parmArray={};
             		boolean isParameterQuery = queryrunner.isParameterQuery(i);
-            		if (queryrunner.isParameterQuery(i)) {
+            		boolean execute = false;
+            		boolean isActionQuery = queryrunner.isActionQuery(i);
+            		if (isParameterQuery) {
             			//System.out.println("Parameter Query: ");
             			int paramAmount = queryrunner.GetParameterAmtForQuery(i);
             			parmArray = new String[paramAmount];
             			for (int k = 0; k < paramAmount ; k++) {
             				System.out.print(queryrunner.GetParamText(i, k) + ": ");
             				String parmval = input.nextLine();
-            				parmArray[k] = parmval;
+            				parmArray[k] = parmval.trim();
             			}
-            			boolean execute;
-            			execute = queryrunner.ExecuteQuery(i, parmArray);
             		}else {
-            			System.out.println("This is a non paramter query" );
-            			boolean execute;
-            			execute = queryrunner.ExecuteQuery(i, parmArray);
+            			System.out.println("This is a non paramter query");
+            		}
+            		if (isActionQuery) {
+            			execute = queryrunner.ExecuteUpdate(i, parmArray);
             			if (execute) {
+            				System.out.println("Rows affected = " + queryrunner.GetUpdateAmount());
+            			}
+            			else {
+            				String error = queryrunner.GetError();
+                    		System.out.print("Returned an error " + error);
+            			}
+            		}else {
+            			execute = queryrunner.ExecuteQuery(i, parmArray);
+            			if (execute){
             				String dataHeader[] = queryrunner.GetQueryHeaders();
             				String data[][] = queryrunner.GetQueryData();
             				System.out.println("The result of Query " + (i+1) + ": ");
@@ -328,13 +339,12 @@ public class QueryRunner {
             				}
             				
             				System.out.println();
-            			}
-            			else {
-            				String error = queryrunner.GetError();
-                    		System.out.print("Returned an error " + error);
-            				
+            			}else {
+        				String error = queryrunner.GetError();
+                		System.out.print("Returned an error " + error);
             			}
             		}
+            		
             	}
             	
             	System.out.println();
