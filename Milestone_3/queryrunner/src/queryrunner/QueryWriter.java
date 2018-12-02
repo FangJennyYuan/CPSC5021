@@ -3,7 +3,7 @@ import java.io.*;
 
 public class QueryWriter
 {
-   public static void writeToCSV(String filename, String[] header, 
+   public static String writeToCSV(String filename, String[] header, 
          String[][] results) throws FileNotFoundException
    {
       File file;
@@ -42,15 +42,16 @@ public class QueryWriter
          outputFile.println();
       }
       outputFile.close();
+      return filename;
    }
    
-   public static void writeToCSV(String[] header, String[][] results) 
+   public static String writeToCSV(String[] header, String[][] results) 
          throws FileNotFoundException
    {
-      writeToCSV(DEFAULT_FILENAME, header, results);
+      return writeToCSV(DEFAULT_FILENAME, header, results);
    }
    
    private static final String DELIMITER = ",";
-   private static final String DEFAULT_FILENAME = "query.csv";
+   private static final String DEFAULT_FILENAME = "query_results.csv";
    private static final String MARKER = "-";
 }

@@ -5,3 +5,4 @@ build/*
 .classpath*
 .DS_Store
 Restaurant-Database-Project/.settings/
+/bin/
