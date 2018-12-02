@@ -263,18 +263,18 @@ public class QueryRunner {
             	System.out.print("Please enter the Database Name: ");
             	String database = input.nextLine();
             	
-            	/*
+            	
             	hostName = "cssql.seattleu.edu";
             	username = "mm_sttest2b";
             	password = "mm_sttest2bPass";
             	database = "mm_sttest2b";
-				*/
-            	
+				
+            	/*
             	hostName = "127.0.0.1";
             	username = "test";
             	password = "test";
             	database = "mm_sttest2b";
-            	
+            	*/
             	
             	boolean validate = queryrunner.Connect(hostName, username, password, database);
             	
