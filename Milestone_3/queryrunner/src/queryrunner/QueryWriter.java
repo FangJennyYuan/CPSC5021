@@ -1,4 +1,4 @@
-package querywriter;
+package queryrunner;
 import java.io.*;
 
 public class QueryWriter
