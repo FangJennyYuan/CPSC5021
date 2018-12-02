@@ -333,7 +333,7 @@ public class QueryRunner {
             			}
             		}
             	}
-            	
+            	//update with insert.
             	
             	System.out.println();
             	validate = queryrunner.Disconnect();
