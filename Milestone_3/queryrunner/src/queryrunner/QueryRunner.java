@@ -6,7 +6,6 @@
 package queryrunner;
 
 // TODO delete this message.... Celeste was here
-// TODO delete this message 12/1
 
 import java.util.ArrayList;
 import java.util.Scanner;
