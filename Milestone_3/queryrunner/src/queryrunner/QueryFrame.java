@@ -12,7 +12,12 @@ package queryrunner;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.Color;
+import java.io.FileNotFoundException;
+
 import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class QueryFrame extends javax.swing.JFrame {
 
@@ -171,6 +176,13 @@ public class QueryFrame extends javax.swing.JFrame {
 
         jPanel2.setLayout(new java.awt.BorderLayout());
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 350, 980, 240));
+        buttonExportCSV.addActionListener(new ActionListener() {
+           public void actionPerformed(ActionEvent e) {
+              buttonExportCSVActionPerformed(e);
+           }
+        });
+        jPanel2.add(buttonExportCSV, BorderLayout.SOUTH);
+        jPanel2.add(panel, BorderLayout.EAST);
 
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -215,7 +227,7 @@ public class QueryFrame extends javax.swing.JFrame {
         getContentPane().add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 190, -1, -1));
 
         jLabel14.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel14.setText("Voter Application");
+        jLabel14.setText("Restaurant Application");
         getContentPane().add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 10, 180, -1));
 
         pack();
@@ -371,7 +383,8 @@ public class QueryFrame extends javax.swing.JFrame {
                 m_jTable.setBackground(ivory);           
                 m_scrollPane = new JScrollPane(m_jTable);
                 jPanel2.add(m_scrollPane);// add table in panel using add() method                      
-                this.setVisible(true);                
+                this.setVisible(true);
+                
             }
             else
             {
@@ -379,6 +392,23 @@ public class QueryFrame extends javax.swing.JFrame {
             }
         }                
     }//GEN-LAST:event_jButton2ActionPerformed
+    
+    
+    private void buttonExportCSVActionPerformed(java.awt.event.ActionEvent evt)
+    {
+       String [] headers;
+       String [][] allData;
+       headers = m_queryrunner.GetQueryHeaders();
+       allData = m_queryrunner.GetQueryData();  
+       try
+       {
+          QueryWriter.writeToCSV(headers, allData);
+       } catch (FileNotFoundException e)
+       {
+          System.err.println("Error writing file");
+          e.printStackTrace();
+       }
+   }
 
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -426,5 +456,7 @@ public class QueryFrame extends javax.swing.JFrame {
     private javax.swing.JTable m_jTable;
     JScrollPane m_scrollPane;
     private int m_queryChoice = 0 ; // This is the default query that was selected 
+    private final JButton buttonExportCSV = new JButton("Export CSV");
+    private final JPanel panel = new JPanel();
 
 }
