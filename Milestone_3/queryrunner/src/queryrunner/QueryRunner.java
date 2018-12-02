@@ -5,8 +5,6 @@
  */
 package queryrunner;
 
-// TODO delete this message.... Celeste was here
-
 import java.util.ArrayList;
 import java.util.Scanner;
 
