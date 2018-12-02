@@ -5,8 +5,6 @@
  */
 package queryrunner;
 
-//Testing branch
-
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -20,20 +18,6 @@ import java.util.Scanner;
  */
 public class QueryRunner {
 
-   private static final String MOST_ORDERED_ITEMS = "SELECT Menu_Product AS" +
-         " 'Most ordered menu items', SUM(Order_Menu_Item_Quantity) AS " + 
-         "'orders' FROM Menu_Item JOIN Order_Menu_Item " + 
-         "ON Order_Menu_Item.Menu_Item_ID = Menu_Item.Menu_Item_ID " + 
-         "GROUP BY Menu_Product ORDER BY COUNT(*) DESC, Menu_Product" + 
-         " LIMIT 20;";
-   
-   private static final String GF_VEG_MENU = 
-         "SELECT Menu_Product, Prices, Product_Type, " + 
-         "Gluten_Free, Vegetarian FROM Menu_Item WHERE Gluten_Free = 1 " + 
-         "OR Vegetarian = 1;";
-   
-   private static final String UPDATE_TABLE = 
-         "call mm_sttest2b.Order_Completed(?);";
     
     public QueryRunner()
     {
@@ -41,7 +25,21 @@ public class QueryRunner {
         m_updateAmount = 0;
         m_queryArray = new ArrayList<>();
         m_error="";
-    
+        
+        private static final String MOST_ORDERED_ITEMS = "SELECT Menu_Product AS" +
+           " 'Most ordered menu items', SUM(Order_Menu_Item_Quantity) AS " + 
+           "'orders' FROM Menu_Item JOIN Order_Menu_Item " + 
+           "ON Order_Menu_Item.Menu_Item_ID = Menu_Item.Menu_Item_ID " + 
+           "GROUP BY Menu_Product ORDER BY COUNT(*) DESC, Menu_Product" + 
+           " LIMIT 20;";
+   
+        private static final String GF_VEG_MENU = 
+           "SELECT Menu_Product, Prices, Product_Type, " + 
+           "Gluten_Free, Vegetarian FROM Menu_Item WHERE Gluten_Free = 1 " + 
+           "OR Vegetarian = 1;";
+   
+        private static final String UPDATE_TABLE = 
+           "call mm_sttest2b.Order_Completed(?);";
         
         // TODO - You will need to change the queries below to match your queries.
         
@@ -59,13 +57,21 @@ public class QueryRunner {
         //    IsItActionQuery (e.g. Mark it true if it is, otherwise false)
         //    IsItParameterQuery (e.g.Mark it true if it is, otherwise false)
         
+        m_queryArray.add(new QueryData("Select e.Employee_Last_Name as Last, \n" + 
+        								"e.Employee_First_Name as First, \r\n" + 
+        								"SUM((UNIX_TIMESTAMP(es.Clock_out) - UNIX_TIMESTAMP(es.Clock_in)) / 3600.0) as Hours \r\n" + 
+						        		"FROM Employee e\r\n" + 
+						        		"JOIN Employee_Schedule es\r\n" + 
+						        		"ON e.Employee_ID = es.Employee_ID\r\n" + 
+						        		"JOIN Employee_Role er\r\n" + 
+						        		"ON e.Employee_ID = er.Employee_ID\r\n" + 
+						        		"WHERE es.Restaurant_Schedule_ID = 14\r\n" + 
+						        		"GROUP BY e.Employee_ID", null, null, false, false));   // Query 13
+        m_queryArray.add(new QueryData("call mm_sttest2b.Receipts(?)",new String [] {"TABLE_ID"}, new boolean [] {false}, false, true));   // Receipt Procedure 
+        
         m_queryArray.add(new QueryData("INSERT INTO Customer(Customer_Name, Customer_Phone_Number, Customer_Email)\n" + 
-                              "VALUES (?,?,?);", new String[] {"Customer_Name", "Customer_Phone_Number", "Customer_Email"}, null, true, true)); // Eric testing
-        /*m_queryArray.add(new QueryData("Select * from contact", null, null, false, false));   // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
-        m_queryArray.add(new QueryData("Select * from contact where contact_id=?", new String [] {"CONTACT_ID"}, new boolean [] {false},  false, true));        // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
-        m_queryArray.add(new QueryData("Select * from contact where contact_name like ?", new String [] {"CONTACT_NAME"}, new boolean [] {true}, false, true));        // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
-        m_queryArray.add(new QueryData("insert into contact (contact_id, contact_name, contact_salary) values (?,?,?)",new String [] {"CONTACT_ID", "CONTACT_NAME", "CONTACT_SALARY"}, new boolean [] {false, false, false}, true, true));// THIS NEEDS TO CHANGE FOR YOUR APPLICATION
- */       
+				   "VALUES (?,?,?);", new String[] {"Customer_Name", "Customer_Phone_Number", "Customer_Email"}, null, true, true)); // Eric testing
+        
         // Most ordered menu items:
         m_queryArray.add(new QueryData (MOST_ORDERED_ITEMS, null, null, false, 
               false));
@@ -87,6 +93,11 @@ public class QueryRunner {
                Set Occupied = True
                Where Table_ID = 10;
          */
+      
+        //m_queryArray.add(new QueryData("Select * from contact where contact_id=?", new String [] {"CONTACT_ID"}, new boolean [] {false},  false, true));        // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
+        //m_queryArray.add(new QueryData("Select * from contact where contact_name like ?", new String [] {"CONTACT_NAME"}, new boolean [] {true}, false, true));        // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
+        //m_queryArray.add(new QueryData("insert into contact (contact_id, contact_name, contact_salary) values (?,?,?)",new String [] {"CONTACT_ID", "CONTACT_NAME", "CONTACT_SALARY"}, new boolean [] {false, false, false}, true, true));// THIS NEEDS TO CHANGE FOR YOUR APPLICATION
+                       
     }
        
 
@@ -234,7 +245,7 @@ public class QueryRunner {
         }
         else
         {
-            if (args[0] == "-console")
+            if (args[0].equals("-console"))
             {
                 // TODO 
                 // You should code the following functionality:
@@ -276,76 +287,111 @@ public class QueryRunner {
                 // NOTE - You can look at the QueryRunner API calls that are in QueryFrame.java for assistance. You should not have to 
                 //    alter any code in QueryJDBC, QueryData, or QueryFrame to make this work.
 
-               
-               System.out.print("Please enter the Host Name: ");
-               Scanner input = new Scanner(System.in);
-               String hostName = input.nextLine();
-               System.out.print("Please enter the User Name: ");
-               String username = input.nextLine();
-               System.out.print("Please enter the Password Name: ");
-               String password = input.nextLine();
-               System.out.print("Please enter the Database Name: ");
-               String database = input.nextLine();
-               
-               hostName = "cssql.seattleu.edu";
-               username = "mm_sttest2b";
-               password = "mm_sttest2bPass";
-               database = "mm_sttest2b";
-               
-               boolean validate = queryrunner.Connect(hostName, username, password, database);
-               
-               if (validate) {
-                  
-                  System.out.println("You are loged in!\n");
-               }
-               else {
-                  String error = queryrunner.GetError();
-                  System.out.print("Returned an error " + error);
-                  return;
-                  //System.out.println("Do you want to try again? ");
-                  
-               }
-               
-               int n = queryrunner.GetTotalQueries();
-               for (int i =0; i<n; i++) {
-                  String [] parmArray={};
-                  boolean isParameterQuery = queryrunner.isParameterQuery(i);
-                  if (queryrunner.isParameterQuery(i)) {
-                     //System.out.println("Parameter Query: ");
-                     int paramAmount = queryrunner.GetParameterAmtForQuery(i);
-                     parmArray = new String[paramAmount];
-                     for (int k = 0; k < paramAmount ; k++) {
-                        System.out.print(queryrunner.GetParamText(i, k) + ": ");
-                        String parmval = input.nextLine();
-                        parmArray[k] = parmval;
-                     }
-                     
-                  }else {
-                     System.out.println("This is a non paramter query" );
-                     boolean execute;
-                     execute = queryrunner.ExecuteQuery(i, parmArray);
-                     if (execute) {
-                        String data[][] = queryrunner.GetQueryData();
-                        System.out.println("The query worked");
-                     }
-                     else {
-                        
-                     }
-                  }
-               }
-               
-               
-               System.out.println();
-               validate = queryrunner.Disconnect();
-               if (validate) {
-                  System.out.println("You have disconnected from " + database);
-               }else {
-                  String error = queryrunner.GetError();
-                  System.out.print("Returned an error " + error);
-                  return;
-               }
-               
-               
+            	
+            	System.out.print("Please enter the Host Name: ");
+            	Scanner input = new Scanner(System.in);
+            	String hostName = input.nextLine();
+            	System.out.print("Please enter the User Name: ");
+            	String username = input.nextLine();
+            	System.out.print("Please enter the Password Name: ");
+            	String password = input.nextLine();
+            	System.out.print("Please enter the Database Name: ");
+            	String database = input.nextLine();
+            	
+            	
+            	hostName = "cssql.seattleu.edu";
+            	username = "mm_sttest2b";
+            	password = "mm_sttest2bPass";
+            	database = "mm_sttest2b";
+				
+            	/*
+            	hostName = "127.0.0.1";
+            	username = "test";
+            	password = "test";
+            	database = "mm_sttest2b";
+            	*/
+            	
+            	boolean validate = queryrunner.Connect(hostName, username, password, database);
+            	
+            	if (validate) {
+            		
+            		System.out.println("You are loged in!\n");
+            	}
+            	else {
+            		String error = queryrunner.GetError();
+            		System.out.print("Returned an error " + error);
+            		return;
+            		//System.out.println("Do you want to try again? ");
+            		
+            	}
+            	
+            	int n = queryrunner.GetTotalQueries();
+            	for (int i =0; i<n; i++) {
+            		String [] parmArray={};
+            		boolean isParameterQuery = queryrunner.isParameterQuery(i);
+            		boolean execute = false;
+            		boolean isActionQuery = queryrunner.isActionQuery(i);
+            		if (isParameterQuery) {
+            			//System.out.println("Parameter Query: ");
+            			int paramAmount = queryrunner.GetParameterAmtForQuery(i);
+            			parmArray = new String[paramAmount];
+            			for (int k = 0; k < paramAmount ; k++) {
+            				System.out.print(queryrunner.GetParamText(i, k) + ": ");
+            				String parmval = input.nextLine();
+            				parmArray[k] = parmval.trim();
+            			}
+            		}else {
+            			System.out.println("This is a non paramter query");
+            		}
+            		if (isActionQuery) {
+            			execute = queryrunner.ExecuteUpdate(i, parmArray);
+            			if (execute) {
+            				System.out.println("Rows affected = " + queryrunner.GetUpdateAmount());
+            			}
+            			else {
+            				String error = queryrunner.GetError();
+                    		System.out.print("Returned an error " + error);
+            			}
+            		}else {
+            			execute = queryrunner.ExecuteQuery(i, parmArray);
+            			if (execute){
+            				String dataHeader[] = queryrunner.GetQueryHeaders();
+            				String data[][] = queryrunner.GetQueryData();
+            				System.out.println("The result of Query " + (i+1) + ": ");
+            				
+            				for (int j=0; j<dataHeader.length; j++) {
+            					System.out.printf("%-20s", dataHeader[j]);
+            				}
+            				
+            				System.out.println();
+            				
+            				for (int row=0; row<data.length; row++) {
+            					for (int col=0; col<dataHeader.length; col++) {
+            						System.out.printf("%-20s", data[row][col]);
+            					}
+            					System.out.println();
+            				}
+            				
+            				System.out.println();
+            			}else {
+        				String error = queryrunner.GetError();
+                		System.out.print("Returned an error " + error);
+            			}
+            		}
+            		
+            	}
+            	
+            	System.out.println();
+            	validate = queryrunner.Disconnect();
+            	if (validate) {
+            		System.out.println("You have disconnected from " + database);
+            	}else {
+            		String error = queryrunner.GetError();
+            		System.out.print("Returned an error " + error);
+            		return;
+            	}
+            	
+            	
             }
             else
             {
@@ -355,4 +401,3 @@ public class QueryRunner {
 
     }    
 }
-
