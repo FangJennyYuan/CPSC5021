@@ -5,8 +5,6 @@
  */
 package queryrunner;
 
-//Testing branch
-
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -28,6 +26,20 @@ public class QueryRunner {
         m_queryArray = new ArrayList<>();
         m_error="";
         
+        private static final String MOST_ORDERED_ITEMS = "SELECT Menu_Product AS" +
+           " 'Most ordered menu items', SUM(Order_Menu_Item_Quantity) AS " + 
+           "'orders' FROM Menu_Item JOIN Order_Menu_Item " + 
+           "ON Order_Menu_Item.Menu_Item_ID = Menu_Item.Menu_Item_ID " + 
+           "GROUP BY Menu_Product ORDER BY COUNT(*) DESC, Menu_Product" + 
+           " LIMIT 20;";
+   
+        private static final String GF_VEG_MENU = 
+           "SELECT Menu_Product, Prices, Product_Type, " + 
+           "Gluten_Free, Vegetarian FROM Menu_Item WHERE Gluten_Free = 1 " + 
+           "OR Vegetarian = 1;";
+   
+        private static final String UPDATE_TABLE = 
+           "call mm_sttest2b.Order_Completed(?);";
         
         // TODO - You will need to change the queries below to match your queries.
         
@@ -60,6 +72,28 @@ public class QueryRunner {
         m_queryArray.add(new QueryData("INSERT INTO Customer(Customer_Name, Customer_Phone_Number, Customer_Email)\n" + 
 				   "VALUES (?,?,?);", new String[] {"Customer_Name", "Customer_Phone_Number", "Customer_Email"}, null, true, true)); // Eric testing
         
+        // Most ordered menu items:
+        m_queryArray.add(new QueryData (MOST_ORDERED_ITEMS, null, null, false, 
+              false));
+        
+        // Gluten free and vegetarian menu items:
+        m_queryArray.add(new QueryData (GF_VEG_MENU, null, null, false, 
+              false));
+        
+        // Update table to indicate order is completed and table is now open:
+        m_queryArray.add(new QueryData (UPDATE_TABLE, new String [] 
+              {"Table_Number"}, new boolean[] {false},  false, true));
+        /*
+            Note: test with table 10. After testing, use this script to reset 
+            values (so table 10 can be used for testing again):
+               update List_Of_Orders
+               Set Completed = 0
+               WHERE Table_ID = 10;
+               Update List_of_Tables
+               Set Occupied = True
+               Where Table_ID = 10;
+         */
+      
         //m_queryArray.add(new QueryData("Select * from contact where contact_id=?", new String [] {"CONTACT_ID"}, new boolean [] {false},  false, true));        // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
         //m_queryArray.add(new QueryData("Select * from contact where contact_name like ?", new String [] {"CONTACT_NAME"}, new boolean [] {true}, false, true));        // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
         //m_queryArray.add(new QueryData("insert into contact (contact_id, contact_name, contact_salary) values (?,?,?)",new String [] {"CONTACT_ID", "CONTACT_NAME", "CONTACT_SALARY"}, new boolean [] {false, false, false}, true, true));// THIS NEEDS TO CHANGE FOR YOUR APPLICATION

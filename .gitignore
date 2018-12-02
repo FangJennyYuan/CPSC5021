@@ -3,3 +3,5 @@ build/*
 .settings/*
 .project*
 .classpath*
+.DS_Store
+Restaurant-Database-Project/.settings/
