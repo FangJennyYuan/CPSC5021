@@ -47,10 +47,10 @@ public class QueryWriter
    public static void writeToCSV(String[] header, String[][] results) 
          throws FileNotFoundException
    {
-      writeToCSV(DEFAULT_CSV_FILENAME, header, results);
+      writeToCSV(DEFAULT_FILENAME, header, results);
    }
    
    private static final String DELIMITER = ",";
-   private static final String DEFAULT_CSV_FILENAME = "query.csv";
+   private static final String DEFAULT_FILENAME = "query.csv";
    private static final String MARKER = "-";
 }
