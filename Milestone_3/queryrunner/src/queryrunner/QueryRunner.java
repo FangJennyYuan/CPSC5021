@@ -45,8 +45,11 @@ public class QueryRunner {
         //    IsItActionQuery (e.g. Mark it true if it is, otherwise false)
         //    IsItParameterQuery (e.g.Mark it true if it is, otherwise false)
         
+        // Insert new Customer into Customer table
         m_queryArray.add(new QueryData("INSERT INTO Customer(Customer_Name, Customer_Phone_Number, Customer_Email)\n" + 
 				   "VALUES (?,?,?);", new String[] {"Customer_Name", "Customer_Phone_Number", "Customer_Email"}, null, true, true));
+        
+        // Quantity of all produce items in stock
         m_queryArray.add(new QueryData("SELECT * FROM Ingredients WHERE Ingredient_Type = 'produce' ORDER BY Ingredient_Total_Qty DESC;", null, null, false, false));
         m_queryArray.add(new QueryData("Select * from contact", null, null, false, false));   // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
         m_queryArray.add(new QueryData("Select * from contact where contact_id=?", new String [] {"CONTACT_ID"}, new boolean [] {false},  false, true));        // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
