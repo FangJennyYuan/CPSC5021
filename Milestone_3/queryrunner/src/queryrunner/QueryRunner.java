@@ -18,6 +18,20 @@ import java.util.Scanner;
  */
 public class QueryRunner {
 
+   private static final String MOST_ORDERED_ITEMS = "SELECT Menu_Product AS" +
+        " 'Most ordered menu items', SUM(Order_Menu_Item_Quantity) AS " + 
+        "'orders' FROM Menu_Item JOIN Order_Menu_Item " + 
+        "ON Order_Menu_Item.Menu_Item_ID = Menu_Item.Menu_Item_ID " +
+	"GROUP BY Menu_Product ORDER BY COUNT(*) DESC, Menu_Product" + 
+        " LIMIT 20;";
+   
+     private static final String GF_VEG_MENU = 
+        "SELECT Menu_Product, Prices, Product_Type, " + 
+        "Gluten_Free, Vegetarian FROM Menu_Item WHERE Gluten_Free = 1 " + 
+        "OR Vegetarian = 1;";
+   
+     private static final String UPDATE_TABLE = 
+        "call mm_sttest2b.Order_Completed(?);";
     
     public QueryRunner()
     {
@@ -25,21 +39,6 @@ public class QueryRunner {
         m_updateAmount = 0;
         m_queryArray = new ArrayList<>();
         m_error="";
-        
-        private static final String MOST_ORDERED_ITEMS = "SELECT Menu_Product AS" +
-           " 'Most ordered menu items', SUM(Order_Menu_Item_Quantity) AS " + 
-           "'orders' FROM Menu_Item JOIN Order_Menu_Item " + 
-           "ON Order_Menu_Item.Menu_Item_ID = Menu_Item.Menu_Item_ID " + 
-           "GROUP BY Menu_Product ORDER BY COUNT(*) DESC, Menu_Product" + 
-           " LIMIT 20;";
-   
-        private static final String GF_VEG_MENU = 
-           "SELECT Menu_Product, Prices, Product_Type, " + 
-           "Gluten_Free, Vegetarian FROM Menu_Item WHERE Gluten_Free = 1 " + 
-           "OR Vegetarian = 1;";
-   
-        private static final String UPDATE_TABLE = 
-           "call mm_sttest2b.Order_Completed(?);";
         
         // TODO - You will need to change the queries below to match your queries.
         
