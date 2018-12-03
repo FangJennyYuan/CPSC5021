@@ -32,6 +32,11 @@ public class QueryRunner {
    
      private static final String UPDATE_TABLE = 
         "call mm_sttest2b.Order_Completed(?);";
+     
+     private static final String RESERVATION = "call mm_sttest2b.Reservations(?,?);";
+     
+     private static final String WAIT_TIME = "SELECT avg(TIMEDIFF(Booking_Date_Time, Walk_In_Time)/100) as"
+     		+ "'Average Wait Time In Minutes' FROM Booking;";
     
     public QueryRunner()
     {
@@ -44,7 +49,7 @@ public class QueryRunner {
         
         // You will need to put your Project Application in the below variable
         
-        this.m_projectTeamApplication="CITYELECTION";    // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
+        this.m_projectTeamApplication="Restaurant Solutions";    // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
         
         // Each row that is added to m_queryArray is a separate query. It does not work on Stored procedure calls.
         // The 'new' Java keyword is a way of initializing the data that will be added to QueryArray. Please do not change
@@ -66,6 +71,7 @@ public class QueryRunner {
 						        		"ON e.Employee_ID = er.Employee_ID\r\n" + 
 						        		"WHERE es.Restaurant_Schedule_ID = 14\r\n" + 
 						        		"GROUP BY e.Employee_ID", null, null, false, false));   // Query 13
+        
         m_queryArray.add(new QueryData("call mm_sttest2b.Receipts(?)",new String [] {"TABLE_ID"}, new boolean [] {false}, false, true));   // Receipt Procedure 
         
         m_queryArray.add(new QueryData("INSERT INTO Customer(Customer_Name, Customer_Phone_Number, Customer_Email)\n" + 
@@ -85,14 +91,22 @@ public class QueryRunner {
         /*
             Note: test with table 10. After testing, use this script to reset 
             values (so table 10 can be used for testing again):
-               update List_Of_Orders
+               update List_Of_Orders.
                Set Completed = 0
                WHERE Table_ID = 10;
                Update List_of_Tables
                Set Occupied = True
                Where Table_ID = 10;
          */
-      
+        
+        //Reservation query
+        m_queryArray.add(new QueryData(RESERVATION, new String[] {"Reservation_Time","Party_Size"},new boolean[]{false,false}, false,true));
+        //Wait time query.
+        m_queryArray.add(new QueryData(WAIT_TIME,null,null,false,false));
+        
+        
+        
+        
         //m_queryArray.add(new QueryData("Select * from contact where contact_id=?", new String [] {"CONTACT_ID"}, new boolean [] {false},  false, true));        // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
         //m_queryArray.add(new QueryData("Select * from contact where contact_name like ?", new String [] {"CONTACT_NAME"}, new boolean [] {true}, false, true));        // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
         //m_queryArray.add(new QueryData("insert into contact (contact_id, contact_name, contact_salary) values (?,?,?)",new String [] {"CONTACT_ID", "CONTACT_NAME", "CONTACT_SALARY"}, new boolean [] {false, false, false}, true, true));// THIS NEEDS TO CHANGE FOR YOUR APPLICATION
