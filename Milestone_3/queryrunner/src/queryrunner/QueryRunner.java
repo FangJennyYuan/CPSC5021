@@ -51,6 +51,7 @@ public class QueryRunner {
         
         // Quantity of all produce items in stock
         m_queryArray.add(new QueryData("SELECT * FROM Ingredients WHERE Ingredient_Type = 'produce' ORDER BY Ingredient_Total_Qty DESC;", null, null, false, false));
+        
         m_queryArray.add(new QueryData("Select * from contact", null, null, false, false));   // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
         m_queryArray.add(new QueryData("Select * from contact where contact_id=?", new String [] {"CONTACT_ID"}, new boolean [] {false},  false, true));        // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
         m_queryArray.add(new QueryData("Select * from contact where contact_name like ?", new String [] {"CONTACT_NAME"}, new boolean [] {true}, false, true));        // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
