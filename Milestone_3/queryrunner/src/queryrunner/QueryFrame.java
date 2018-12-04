@@ -12,7 +12,12 @@ package queryrunner;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.Color;
+import java.io.FileNotFoundException;
+
 import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class QueryFrame extends javax.swing.JFrame {
 
@@ -23,6 +28,8 @@ public class QueryFrame extends javax.swing.JFrame {
  * @param queryrunnerObj 
  */
     public QueryFrame(QueryRunner queryrunnerObj) {
+   getContentPane().setBackground(new Color(240, 255, 240));
+   getContentPane().setForeground(new Color(240, 255, 240));
         initComponents();
         m_parmlabels = new JLabel[]{jLabel1, jLabel2, jLabel3, jLabel4, jLabel9, jLabel10, jLabel11, jLabel12};        
         m_textvals = new JTextField[] { jTextField5, jTextField6,jTextField7,jTextField8,jTextField9,jTextField10,jTextField11,jTextField12};
@@ -33,7 +40,8 @@ public class QueryFrame extends javax.swing.JFrame {
 
         for (int i=0; i < nAmt; i++)
         {
-            this.jComboBox1.addItem("Query " + (i+1));
+ //           this.jComboBox1.addItem("Query " + (i+1));
+           this.jComboBox1.addItem((i + 1) + ": " + m_queryrunner.getName(i));
         }
         jComboBox1.setEnabled(false);
         jButton2.setEnabled(false);
@@ -62,6 +70,7 @@ public class QueryFrame extends javax.swing.JFrame {
         jTextField3 = new javax.swing.JTextField();
         jTextField3.setText("mm_sttest2b");
         jPanel1 = new javax.swing.JPanel();
+        jPanel1.setBackground(new Color(240, 255, 255));
         jTextField5 = new javax.swing.JTextField();
         jTextField6 = new javax.swing.JTextField();
         jTextField7 = new javax.swing.JTextField();
@@ -79,6 +88,7 @@ public class QueryFrame extends javax.swing.JFrame {
         jTextField11 = new javax.swing.JTextField();
         jTextField12 = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
+        jPanel2.setBackground(new Color(240, 248, 255));
         jComboBox1 = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -137,7 +147,7 @@ public class QueryFrame extends javax.swing.JFrame {
         jLabel3.setToolTipText("");
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(652, 29, 115, -1));
 
-        jLabel4.setBackground(new java.awt.Color(204, 255, 255));
+        jLabel4.setBackground(new Color(240, 248, 255));
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel4.setText("aaa");
         jLabel4.setToolTipText("");
@@ -171,6 +181,13 @@ public class QueryFrame extends javax.swing.JFrame {
 
         jPanel2.setLayout(new java.awt.BorderLayout());
         getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 350, 980, 240));
+        buttonExportCSV.addActionListener(new ActionListener() {
+           public void actionPerformed(ActionEvent e) {
+              buttonExportCSVActionPerformed(e);
+           }
+        });
+        jPanel2.add(buttonExportCSV, BorderLayout.SOUTH);
+        jPanel2.add(panel, BorderLayout.EAST);
 
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -215,7 +232,7 @@ public class QueryFrame extends javax.swing.JFrame {
         getContentPane().add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 190, -1, -1));
 
         jLabel14.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
-        jLabel14.setText("Voter Application");
+        jLabel14.setText("Restaurant Application");
         getContentPane().add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 10, 180, -1));
 
         pack();
@@ -274,8 +291,10 @@ public class QueryFrame extends javax.swing.JFrame {
         
         jTextArea2.setText("");
         String szChoice = (String)jComboBox1.getSelectedItem();        
-        String szStripChoice = szChoice.substring(6);
-        m_queryChoice = Integer.parseInt(szStripChoice)-1;        
+ //       String szStripChoice = szChoice.substring(6);
+//        m_queryChoice = Integer.parseInt(szStripChoice)-1;
+        m_queryChoice = extractQueryNumber(szChoice) - 1;
+        
         String szQuery = m_queryrunner.GetQueryText(m_queryChoice);
         this.jTextArea1.setText(szQuery);
         System.out.println("choice is " + szChoice);
@@ -305,6 +324,19 @@ public class QueryFrame extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_jComboBox1ActionPerformed
+    
+    // Helper method to parse int from query description on pull down menu
+    private int extractQueryNumber(String queryDesc)
+    {
+       StringBuilder sb = new StringBuilder();
+       for (int i = 0; i < queryDesc.length(); i++)
+       {
+          char c = queryDesc.charAt(i);
+          if (Character.isDigit(c))
+             sb.append(c);
+       }
+       return Integer.parseInt(sb.toString());
+    }
 
     
 /**
@@ -371,7 +403,8 @@ public class QueryFrame extends javax.swing.JFrame {
                 m_jTable.setBackground(ivory);           
                 m_scrollPane = new JScrollPane(m_jTable);
                 jPanel2.add(m_scrollPane);// add table in panel using add() method                      
-                this.setVisible(true);                
+                this.setVisible(true);
+                
             }
             else
             {
@@ -379,6 +412,25 @@ public class QueryFrame extends javax.swing.JFrame {
             }
         }                
     }//GEN-LAST:event_jButton2ActionPerformed
+    
+    
+    private void buttonExportCSVActionPerformed(java.awt.event.ActionEvent evt)
+    {
+       String [] headers;
+       String [][] allData;
+       headers = m_queryrunner.GetQueryHeaders();
+       allData = m_queryrunner.GetQueryData();  
+       try
+       {
+          String csvFilename = QueryWriter.writeToCSV(headers, allData);
+          jTextArea2.setText("Query results have been exported to CSV file:\n"
+                + csvFilename);
+       } catch (FileNotFoundException e)
+       {
+          System.err.println("Error writing file");
+          e.printStackTrace();
+       }
+   }
 
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -426,5 +478,7 @@ public class QueryFrame extends javax.swing.JFrame {
     private javax.swing.JTable m_jTable;
     JScrollPane m_scrollPane;
     private int m_queryChoice = 0 ; // This is the default query that was selected 
+    private final JButton buttonExportCSV = new JButton("Export CSV");
+    private final JPanel panel = new JPanel();
 
 }

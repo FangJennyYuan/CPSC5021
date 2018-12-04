@@ -224,8 +224,9 @@ public class QueryJDBC {
     }
     
 
-    /* Document this function
-    // TODO    
+    /* Closes out the connection to the database.If successful returns true.
+     * If a connection can not be closed a the reason will be printed but will
+     * return false.
     */
     public boolean CloseDatabase()
     {        
@@ -234,7 +235,7 @@ public class QueryJDBC {
 
             m_conn.close();
            
-        } 
+        } //Exception handling if connection can not be closed. 
         catch (SQLException ex) 
         {
             
