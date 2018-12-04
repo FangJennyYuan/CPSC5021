@@ -41,18 +41,21 @@ public class QueryRunner {
         //    IsItActionQuery (e.g. Mark it true if it is, otherwise false)
         //    IsItParameterQuery (e.g.Mark it true if it is, otherwise false)
         
+        
+
         final String EMP_HOURS_NAME = "Hours worked for each employee";
-        m_queryArray.add(new QueryData(EMP_HOURS_NAME, 
-                             "Select e.Employee_Last_Name as Last, \n" + 
-        								"e.Employee_First_Name as First, \r\n" + 
-        								"SUM((UNIX_TIMESTAMP(es.Clock_out) - UNIX_TIMESTAMP(es.Clock_in)) / 3600.0) as Hours \r\n" + 
-						        		"FROM Employee e\r\n" + 
-						        		"JOIN Employee_Schedule es\r\n" + 
-						        		"ON e.Employee_ID = es.Employee_ID\r\n" + 
-						        		"JOIN Employee_Role er\r\n" + 
-						        		"ON e.Employee_ID = er.Employee_ID\r\n" + 
-						        		"WHERE es.Restaurant_Schedule_ID = 14\r\n" + 
-						        		"GROUP BY e.Employee_ID", null, null, false, false));   // Query 13
+        final String EMP_HOURS = "Select e.Employee_Last_Name as Last, \n" + 
+				"e.Employee_First_Name as First, \r\n" + 
+				"SUM((UNIX_TIMESTAMP(es.Clock_out) - UNIX_TIMESTAMP(es.Clock_in)) / 3600.0) as Hours \r\n" + 
+        		"FROM Employee e\r\n" + 
+        		"JOIN Employee_Schedule es\r\n" + 
+        		"ON e.Employee_ID = es.Employee_ID\r\n" + 
+        		"JOIN Employee_Role er\r\n" + 
+        		"ON e.Employee_ID = er.Employee_ID\r\n" + 
+        		"WHERE es.Restaurant_Schedule_ID = 14\r\n" + 
+        		"GROUP BY e.Employee_ID";
+        		
+        m_queryArray.add(new QueryData(EMP_HOURS_NAME, EMP_HOURS, null, null, false, false));   // Query 13
         
         final String RECEIPT_NAME = "Generate receipt for table";
         m_queryArray.add(new QueryData(RECEIPT_NAME, "call mm_sttest2b.Receipts(?)",new String [] {"TABLE_ID"}, new boolean [] {false}, false, true));   // Receipt Procedure 
@@ -89,39 +92,48 @@ public class QueryRunner {
         m_queryArray.add(new QueryData (MOST_ORDERED_NAME, MOST_ORDERED_ITEMS, 
               null, null, false, false));
         
+        
         // Update table to indicate order is completed and table is now open
         final String UPDATE_TABLE_NAME = "Complete order and clear table";
         final String UPDATE_TABLE = "call mm_sttest2b.Order_Completed(?);";
-        m_queryArray.add(new QueryData (UPDATE_TABLE_NAME, UPDATE_TABLE, new 
-              String [] {"Table_Number"}, new boolean[] {false},  false, true));
-        /*
-            Note: test with table 10. After testing, use this script to reset 
-            values (so table 10 can be used for testing again):
-               update List_Of_Orders.
-               Set Completed = 0
-               WHERE Table_ID = 10;
-               Update List_of_Tables
-               Set Occupied = True
-               Where Table_ID = 10;
-         */
+        m_queryArray.add(new QueryData (UPDATE_TABLE_NAME, UPDATE_TABLE, new String [] 
+              {"Table_Number"}, new boolean[] {false},  false, true));
         
+        /*
+        Note: test with table 10. After testing, use this script to reset 
+        values (so table 10 can be used for testing again):
+           update List_Of_Orders.
+           Set Completed = 0
+           WHERE Table_ID = 10;
+           Update List_of_Tables
+           Set Occupied = True
+           Where Table_ID = 10;
+     */
+    
         // Quantity of all produce items in stock
         final String INGREDIENTS_NAME = "Quantity of all ingredients in stock";
         final String INGREDIENTS = "SELECT * FROM Ingredients ORDER BY Ingredient_Total_Qty DESC;";
         m_queryArray.add(new QueryData(INGREDIENTS_NAME, INGREDIENTS, null, null, false, false)); 
+       
         
         final String RESERVATION = "call mm_sttest2b.Reservations(?,?);";
     	//Reservation query
         m_queryArray.add(new QueryData("Reservations",RESERVATION, new String[] 
         		{"Reservation_Time","Party_Size"},new boolean[]{false,false}, false,true));
         
+        
+        
         final String WAIT_TIME = "SELECT avg(TIMEDIFF(Booking_Date_Time, Walk_In_Time)/100) as"
          		+ "'Average Wait Time In Minutes' FROM Booking;";
        //Wait time query.
        m_queryArray.add(new QueryData("Avg Wait Time",WAIT_TIME,null,null,false,false));
-        
-        
-        
+
+     // Update table to indicate order is completed and table is now open
+        final String INSERT_ORDER_NAME = "Add a new order";
+        final String INSERT_ORDER = "call mm_sttest2b.Insert_Order(?, ?, ?, ?, ?);";
+        m_queryArray.add(new QueryData (INSERT_ORDER_NAME, INSERT_ORDER, 
+        		new String [] {"Employee", "TableID", "Notes", "Menu_Item_Id", "Quantity"}, 
+        		new boolean[] {false, false, false, false, false},  false, true));
     }
        
 
