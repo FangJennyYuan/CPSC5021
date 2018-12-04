@@ -51,6 +51,7 @@ public class QueryRunner {
 						        		"ON e.Employee_ID = er.Employee_ID\r\n" + 
 						        		"WHERE es.Restaurant_Schedule_ID = 14\r\n" + 
 						        		"GROUP BY e.Employee_ID", null, null, false, false));   // Query 13
+        
         m_queryArray.add(new QueryData("call mm_sttest2b.Receipts(?)",new String [] {"TABLE_ID"}, new boolean [] {false}, false, true));   // Receipt Procedure 
         
         m_queryArray.add(new QueryData("INSERT INTO Customer(Customer_Name, Customer_Phone_Number, Customer_Email)\n" + 
@@ -88,7 +89,7 @@ public class QueryRunner {
         /*
             Note: test with table 10. After testing, use this script to reset 
             values (so table 10 can be used for testing again):
-               update List_Of_Orders
+               update List_Of_Orders.
                Set Completed = 0
                WHERE Table_ID = 10;
                Update List_of_Tables
@@ -100,6 +101,7 @@ public class QueryRunner {
         final String PRODUCE_ITEMS = "SELECT * FROM Ingredients WHERE " + 
               "Ingredient_Type = 'produce' ORDER BY Ingredient_Total_Qty DESC;";
         m_queryArray.add(new QueryData(PRODUCE_ITEMS, null, null, false, false));           
+
     }
        
 
