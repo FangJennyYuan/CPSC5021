@@ -29,7 +29,7 @@ public class QueryRunner {
         
         // You will need to put your Project Application in the below variable
         
-        this.m_projectTeamApplication="RESTAURANTDB";    // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
+        this.m_projectTeamApplication="Restaurant Solutions";    // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
         
         // Each row that is added to m_queryArray is a separate query. It does not work on Stored procedure calls.
         // The 'new' Java keyword is a way of initializing the data that will be added to QueryArray. Please do not change
@@ -57,15 +57,15 @@ public class QueryRunner {
 				   "VALUES (?,?,?);", new String[] {"Customer_Name", "Customer_Phone_Number", "Customer_Email"}, null, true, true)); // Eric testing
         
         // Display all current menu items
-        final String CURRENT_MENU = "SELECT Menu_Product, Prices, " + 
-              "Product_Type, Season, Gluten_Free, Vegetarian FROM Menu_Item " + 
-              "WHERE Active = 1 ORDER BY Product_Type";
+        final String CURRENT_MENU = "SELECT Menu_Item_ID, Menu_Product, " + 
+              "Prices, Product_Type, Season, Gluten_Free, Vegetarian " + 
+              "FROM Menu_Item WHERE Active = 1 ORDER BY Product_Type";
         m_queryArray.add(new QueryData (CURRENT_MENU, null, null, false, 
               false));
         
         // Display gluten free and vegetarian menu items:
         final String GF_VEG_MENU = 
-              "SELECT Menu_Product, Prices, Product_Type, " + 
+              "SELECT Menu_Item_ID, Menu_Product, Prices, Product_Type, " + 
               "Gluten_Free, Vegetarian FROM Menu_Item WHERE Gluten_Free = 1 " + 
               "OR Vegetarian = 1 AND Active = 1;";
         m_queryArray.add(new QueryData (GF_VEG_MENU, null, null, false, 
