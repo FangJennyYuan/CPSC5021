@@ -40,7 +40,8 @@ public class QueryFrame extends javax.swing.JFrame {
 
         for (int i=0; i < nAmt; i++)
         {
-            this.jComboBox1.addItem("Query " + (i+1));
+ //           this.jComboBox1.addItem("Query " + (i+1));
+           this.jComboBox1.addItem((i + 1) + ": " + m_queryrunner.getName(i));
         }
         jComboBox1.setEnabled(false);
         jButton2.setEnabled(false);
@@ -290,8 +291,10 @@ public class QueryFrame extends javax.swing.JFrame {
         
         jTextArea2.setText("");
         String szChoice = (String)jComboBox1.getSelectedItem();        
-        String szStripChoice = szChoice.substring(6);
-        m_queryChoice = Integer.parseInt(szStripChoice)-1;        
+ //       String szStripChoice = szChoice.substring(6);
+//        m_queryChoice = Integer.parseInt(szStripChoice)-1;   //FIXME currently, this will only work for 9 queries    
+        m_queryChoice = Integer.parseInt(szChoice.substring(0, 1)) - 1;
+        
         String szQuery = m_queryrunner.GetQueryText(m_queryChoice);
         this.jTextArea1.setText(szQuery);
         System.out.println("choice is " + szChoice);
