@@ -41,6 +41,7 @@ public class QueryRunner {
         //    IsItActionQuery (e.g. Mark it true if it is, otherwise false)
         //    IsItParameterQuery (e.g.Mark it true if it is, otherwise false)
         
+        
         m_queryArray.add(new QueryData("Select e.Employee_Last_Name as Last, \n" + 
         								"e.Employee_First_Name as First, \r\n" + 
         								"SUM((UNIX_TIMESTAMP(es.Clock_out) - UNIX_TIMESTAMP(es.Clock_in)) / 3600.0) as Hours \r\n" + 
@@ -81,11 +82,14 @@ public class QueryRunner {
         m_queryArray.add(new QueryData (MOST_ORDERED_ITEMS, null, null, false, 
               false));
         
+        
         // Update table to indicate order is completed and table is now open
         final String UPDATE_TABLE = "call mm_sttest2b.Order_Completed(?);";
         m_queryArray.add(new QueryData (UPDATE_TABLE, new String [] 
               {"Table_Number"}, new boolean[] {false},  false, true));
-        /*
+        
+        
+        	/*
             Note: test with table 10. After testing, use this script to reset 
             values (so table 10 can be used for testing again):
                update List_Of_Orders
@@ -94,12 +98,20 @@ public class QueryRunner {
                Update List_of_Tables
                Set Occupied = True
                Where Table_ID = 10;
-         */
-        
+         	*/
+        	
         // Quantity of all produce items in stock
         final String PRODUCE_ITEMS = "SELECT * FROM Ingredients WHERE " + 
               "Ingredient_Type = 'produce' ORDER BY Ingredient_Total_Qty DESC;";
-        m_queryArray.add(new QueryData(PRODUCE_ITEMS, null, null, false, false));           
+        m_queryArray.add(new QueryData(PRODUCE_ITEMS, null, null, false, false));   
+        
+        
+     // Update table to indicate order is completed and table is now open
+        final String INSERT_ORDER = "call mm_sttest2b.Insert_Order(?, ?, ?, ?, ?);";
+        m_queryArray.add(new QueryData (INSERT_ORDER, 
+        		new String [] {"Employee", "TableID", "Notes", "Menu_Item_Id", "Quantity"}, 
+        		new boolean[] {false, false, false, false, false},  false, true));
+    
     }
        
 
