@@ -17,26 +17,6 @@ import java.util.Scanner;
  * functions in order to run the Queries.
  */
 public class QueryRunner {
-
-   private static final String MOST_ORDERED_ITEMS = "SELECT Menu_Product AS" +
-        " 'Most ordered menu items', SUM(Order_Menu_Item_Quantity) AS " + 
-        "'orders' FROM Menu_Item JOIN Order_Menu_Item " + 
-        "ON Order_Menu_Item.Menu_Item_ID = Menu_Item.Menu_Item_ID " +
-	"GROUP BY Menu_Product ORDER BY COUNT(*) DESC, Menu_Product" + 
-        " LIMIT 20;";
-   
-     private static final String GF_VEG_MENU = 
-        "SELECT Menu_Product, Prices, Product_Type, " + 
-        "Gluten_Free, Vegetarian FROM Menu_Item WHERE Gluten_Free = 1 " + 
-        "OR Vegetarian = 1;";
-   
-     private static final String UPDATE_TABLE = 
-        "call mm_sttest2b.Order_Completed(?);";
-     
-     private static final String RESERVATION = "call mm_sttest2b.Reservations(?,?);";
-     
-     private static final String WAIT_TIME = "SELECT avg(TIMEDIFF(Booking_Date_Time, Walk_In_Time)/100) as"
-     		+ "'Average Wait Time In Minutes' FROM Booking;";
     
     public QueryRunner()
     {
@@ -77,15 +57,33 @@ public class QueryRunner {
         m_queryArray.add(new QueryData("INSERT INTO Customer(Customer_Name, Customer_Phone_Number, Customer_Email)\n" + 
 				   "VALUES (?,?,?);", new String[] {"Customer_Name", "Customer_Phone_Number", "Customer_Email"}, null, true, true)); // Eric testing
         
-        // Most ordered menu items:
-        m_queryArray.add(new QueryData (MOST_ORDERED_ITEMS, null, null, false, 
+        // Display all current menu items
+        final String CURRENT_MENU = "SELECT Menu_Item_ID, Menu_Product, " + 
+              "Prices, Product_Type, Season, Gluten_Free, Vegetarian " + 
+              "FROM Menu_Item WHERE Active = 1 ORDER BY Product_Type";
+        m_queryArray.add(new QueryData (CURRENT_MENU, null, null, false, 
               false));
         
-        // Gluten free and vegetarian menu items:
+        // Display gluten free and vegetarian menu items:
+        final String GF_VEG_MENU = 
+              "SELECT Menu_Item_ID, Menu_Product, Prices, Product_Type, " + 
+              "Gluten_Free, Vegetarian FROM Menu_Item WHERE Gluten_Free = 1 " + 
+              "OR Vegetarian = 1 AND Active = 1;";
         m_queryArray.add(new QueryData (GF_VEG_MENU, null, null, false, 
               false));
         
-        // Update table to indicate order is completed and table is now open:
+        // Most ordered menu items:
+        final String MOST_ORDERED_ITEMS = "SELECT Menu_Product AS" +
+              " 'Most ordered menu items', SUM(Order_Menu_Item_Quantity) AS " + 
+              "'orders' FROM Menu_Item JOIN Order_Menu_Item " + 
+              "ON Order_Menu_Item.Menu_Item_ID = Menu_Item.Menu_Item_ID " +
+              "GROUP BY Menu_Product ORDER BY COUNT(*) DESC, Menu_Product" + 
+              " LIMIT 20;";
+        m_queryArray.add(new QueryData (MOST_ORDERED_ITEMS, null, null, false, 
+              false));
+        
+        // Update table to indicate order is completed and table is now open
+        final String UPDATE_TABLE = "call mm_sttest2b.Order_Completed(?);";
         m_queryArray.add(new QueryData (UPDATE_TABLE, new String [] 
               {"Table_Number"}, new boolean[] {false},  false, true));
         /*
@@ -99,18 +97,11 @@ public class QueryRunner {
                Where Table_ID = 10;
          */
         
-        //Reservation query
-        m_queryArray.add(new QueryData(RESERVATION, new String[] {"Reservation_Time","Party_Size"},new boolean[]{false,false}, false,true));
-        //Wait time query.
-        m_queryArray.add(new QueryData(WAIT_TIME,null,null,false,false));
-        
-        
-        
-        
-        //m_queryArray.add(new QueryData("Select * from contact where contact_id=?", new String [] {"CONTACT_ID"}, new boolean [] {false},  false, true));        // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
-        //m_queryArray.add(new QueryData("Select * from contact where contact_name like ?", new String [] {"CONTACT_NAME"}, new boolean [] {true}, false, true));        // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
-        //m_queryArray.add(new QueryData("insert into contact (contact_id, contact_name, contact_salary) values (?,?,?)",new String [] {"CONTACT_ID", "CONTACT_NAME", "CONTACT_SALARY"}, new boolean [] {false, false, false}, true, true));// THIS NEEDS TO CHANGE FOR YOUR APPLICATION
-                       
+        // Quantity of all produce items in stock
+        final String PRODUCE_ITEMS = "SELECT * FROM Ingredients WHERE " + 
+              "Ingredient_Type = 'produce' ORDER BY Ingredient_Total_Qty DESC;";
+        m_queryArray.add(new QueryData(PRODUCE_ITEMS, null, null, false, false));           
+
     }
        
 
