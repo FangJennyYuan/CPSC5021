@@ -97,7 +97,7 @@ public class QueryRunner {
         /*
             Note: test with table 10. After testing, use this script to reset 
             values (so table 10 can be used for testing again):
-               update List_Of_Orders
+               update List_Of_Orders.
                Set Completed = 0
                WHERE Table_ID = 10;
                Update List_of_Tables
