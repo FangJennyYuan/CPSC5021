@@ -113,16 +113,27 @@ public class QueryRunner {
         // Quantity of all produce items in stock
         final String INGREDIENTS_NAME = "Quantity of all ingredients in stock";
         final String INGREDIENTS = "SELECT * FROM Ingredients ORDER BY Ingredient_Total_Qty DESC;";
-        m_queryArray.add(new QueryData(INGREDIENTS_NAME, INGREDIENTS, null, null, false, false));  
-
+        m_queryArray.add(new QueryData(INGREDIENTS_NAME, INGREDIENTS, null, null, false, false)); 
+       
         
+        final String RESERVATION = "call mm_sttest2b.Reservations(?,?);";
+    	//Reservation query
+        m_queryArray.add(new QueryData("Reservations",RESERVATION, new String[] 
+        		{"Reservation_Time","Party_Size"},new boolean[]{false,false}, false,true));
+        
+        
+        
+        final String WAIT_TIME = "SELECT avg(TIMEDIFF(Booking_Date_Time, Walk_In_Time)/100) as"
+         		+ "'Average Wait Time In Minutes' FROM Booking;";
+       //Wait time query.
+       m_queryArray.add(new QueryData("Avg Wait Time",WAIT_TIME,null,null,false,false));
+
      // Update table to indicate order is completed and table is now open
         final String INSERT_ORDER_NAME = "Add a new order";
         final String INSERT_ORDER = "call mm_sttest2b.Insert_Order(?, ?, ?, ?, ?);";
         m_queryArray.add(new QueryData (INSERT_ORDER_NAME, INSERT_ORDER, 
         		new String [] {"Employee", "TableID", "Notes", "Menu_Item_Id", "Quantity"}, 
         		new boolean[] {false, false, false, false, false},  false, true));
-
     }
        
 
