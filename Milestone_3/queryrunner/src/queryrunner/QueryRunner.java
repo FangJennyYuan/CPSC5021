@@ -53,16 +53,8 @@ public class QueryRunner {
         		"ON e.Employee_ID = er.Employee_ID\r\n" + 
         		"WHERE es.Restaurant_Schedule_ID = 14\r\n" + 
         		"GROUP BY e.Employee_ID";
-        		
-        m_queryArray.add(new QueryData(EMP_HOURS_NAME, EMP_HOURS, null, null, false, false));   // Query 13
         
-        final String RECEIPT_NAME = "Generate receipt for table";
-        m_queryArray.add(new QueryData(RECEIPT_NAME, "call mm_sttest2b.Receipts(?)",new String [] {"TABLE_ID"}, new boolean [] {false}, false, true));   // Receipt Procedure 
-        
-        String NEW_CUSTOMER = "Add new customer";
-        m_queryArray.add(new QueryData(NEW_CUSTOMER, "INSERT INTO Customer(Customer_Name, Customer_Phone_Number, Customer_Email)\n" + 
-				   "VALUES (?,?,?);", new String[] {"Customer_Name", "Customer_Phone_Number", "Customer_Email"}, null, true, true)); // Eric testing
-        
+        // Start list of queries
         // Display all current menu items
         final String CURRENT_MENU_NAME = "Current menu items";
         final String CURRENT_MENU = "SELECT Menu_Item_ID, Menu_Product, " + 
@@ -70,6 +62,33 @@ public class QueryRunner {
               "FROM Menu_Item WHERE Active = 1 ORDER BY Product_Type";
         m_queryArray.add(new QueryData (CURRENT_MENU_NAME, CURRENT_MENU, null, 
               null, false, false));
+        
+        // Update table to indicate order is completed and table is now open
+        final String INSERT_ORDER_NAME = "Add a new order";
+        final String INSERT_ORDER = "call mm_sttest2b.Insert_Order(?, ?, ?, ?, ?);";
+        m_queryArray.add(new QueryData (INSERT_ORDER_NAME, INSERT_ORDER, 
+        		new String [] {"Employee", "TableID", "Notes", "Menu_Item_Id", "Quantity"}, 
+        		new boolean[] {false, false, false, false, false},  false, true));
+        
+        // Receipt Procedure 
+        final String RECEIPT_NAME = "Generate receipt for table";
+        m_queryArray.add(new QueryData(RECEIPT_NAME, "call mm_sttest2b.Receipts(?)",new String [] {"TABLE_ID"}, new boolean [] {false}, false, true));   
+        
+        // Update table to indicate order is completed and table is now open
+        final String UPDATE_TABLE_NAME = "Complete order and clear table";
+        final String UPDATE_TABLE = "call mm_sttest2b.Order_Completed(?);";
+        m_queryArray.add(new QueryData (UPDATE_TABLE_NAME, UPDATE_TABLE, new String [] 
+              {"Table_Number"}, new boolean[] {false},  false, true));
+        
+        
+        m_queryArray.add(new QueryData(EMP_HOURS_NAME, EMP_HOURS, null, null, false, false));   // Query 13
+        
+        
+        
+        String NEW_CUSTOMER = "Add new customer";
+        m_queryArray.add(new QueryData(NEW_CUSTOMER, "INSERT INTO Customer(Customer_Name, Customer_Phone_Number, Customer_Email)\n" + 
+				   "VALUES (?,?,?);", new String[] {"Customer_Name", "Customer_Phone_Number", "Customer_Email"}, null, true, true)); // Eric testing
+        
         
         // Display gluten free and vegetarian menu items:
         final String GF_VEG_NAME = "Gluten free and vegetarian menu items";
@@ -92,11 +111,7 @@ public class QueryRunner {
               null, null, false, false));
         
         
-        // Update table to indicate order is completed and table is now open
-        final String UPDATE_TABLE_NAME = "Complete order and clear table";
-        final String UPDATE_TABLE = "call mm_sttest2b.Order_Completed(?);";
-        m_queryArray.add(new QueryData (UPDATE_TABLE_NAME, UPDATE_TABLE, new String [] 
-              {"Table_Number"}, new boolean[] {false},  false, true));
+        
         
         /*
         Note: test with table 10. After testing, use this script to reset 
@@ -107,7 +122,7 @@ public class QueryRunner {
            Update List_of_Tables
            Set Occupied = True
            Where Table_ID = 10;
-     */
+        */
     
         // Quantity of all produce items in stock
         final String INGREDIENTS_NAME = "Quantity of all ingredients in stock";
@@ -127,12 +142,7 @@ public class QueryRunner {
        //Wait time query.
        m_queryArray.add(new QueryData("Avg Wait Time",WAIT_TIME,null,null,false,false));
 
-     // Update table to indicate order is completed and table is now open
-        final String INSERT_ORDER_NAME = "Add a new order";
-        final String INSERT_ORDER = "call mm_sttest2b.Insert_Order(?, ?, ?, ?, ?);";
-        m_queryArray.add(new QueryData (INSERT_ORDER_NAME, INSERT_ORDER, 
-        		new String [] {"Employee", "TableID", "Notes", "Menu_Item_Id", "Quantity"}, 
-        		new boolean[] {false, false, false, false, false},  false, true));
+     
 
     }
        

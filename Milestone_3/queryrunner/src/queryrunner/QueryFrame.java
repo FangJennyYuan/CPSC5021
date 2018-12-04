@@ -28,8 +28,8 @@ public class QueryFrame extends javax.swing.JFrame {
  * @param queryrunnerObj 
  */
     public QueryFrame(QueryRunner queryrunnerObj) {
-   getContentPane().setBackground(new Color(240, 255, 240));
-   getContentPane().setForeground(new Color(240, 255, 240));
+   getContentPane().setBackground(new Color(240,248,255));
+   getContentPane().setForeground(new Color(240,248,255));
         initComponents();
         m_parmlabels = new JLabel[]{jLabel1, jLabel2, jLabel3, jLabel4, jLabel9, jLabel10, jLabel11, jLabel12};        
         m_textvals = new JTextField[] { jTextField5, jTextField6,jTextField7,jTextField8,jTextField9,jTextField10,jTextField11,jTextField12};
