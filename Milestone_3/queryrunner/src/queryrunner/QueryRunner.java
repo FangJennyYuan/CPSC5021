@@ -29,7 +29,7 @@ public class QueryRunner {
         
         // You will need to put your Project Application in the below variable
         
-        this.m_projectTeamApplication="RESTAURANTDB";    // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
+        this.m_projectTeamApplication="Restaurant Solutions";    // THIS NEEDS TO CHANGE FOR YOUR APPLICATION
         
         // Each row that is added to m_queryArray is a separate query. It does not work on Stored procedure calls.
         // The 'new' Java keyword is a way of initializing the data that will be added to QueryArray. Please do not change
@@ -42,76 +42,87 @@ public class QueryRunner {
         //    IsItParameterQuery (e.g.Mark it true if it is, otherwise false)
         
         
-        m_queryArray.add(new QueryData("Select e.Employee_Last_Name as Last, \n" + 
-        								"e.Employee_First_Name as First, \r\n" + 
-        								"SUM((UNIX_TIMESTAMP(es.Clock_out) - UNIX_TIMESTAMP(es.Clock_in)) / 3600.0) as Hours \r\n" + 
-						        		"FROM Employee e\r\n" + 
-						        		"JOIN Employee_Schedule es\r\n" + 
-						        		"ON e.Employee_ID = es.Employee_ID\r\n" + 
-						        		"JOIN Employee_Role er\r\n" + 
-						        		"ON e.Employee_ID = er.Employee_ID\r\n" + 
-						        		"WHERE es.Restaurant_Schedule_ID = 14\r\n" + 
-						        		"GROUP BY e.Employee_ID", null, null, false, false));   // Query 13
-        m_queryArray.add(new QueryData("call mm_sttest2b.Receipts(?)",new String [] {"TABLE_ID"}, new boolean [] {false}, false, true));   // Receipt Procedure 
+
+        final String EMP_HOURS_NAME = "Hours worked for each employee";
+        final String EMP_HOURS = "Select e.Employee_Last_Name as Last, \n" + 
+				"e.Employee_First_Name as First, \r\n" + 
+				"SUM((UNIX_TIMESTAMP(es.Clock_out) - UNIX_TIMESTAMP(es.Clock_in)) / 3600.0) as Hours \r\n" + 
+        		"FROM Employee e\r\n" + 
+        		"JOIN Employee_Schedule es\r\n" + 
+        		"ON e.Employee_ID = es.Employee_ID\r\n" + 
+        		"JOIN Employee_Role er\r\n" + 
+        		"ON e.Employee_ID = er.Employee_ID\r\n" + 
+        		"WHERE es.Restaurant_Schedule_ID = 14\r\n" + 
+        		"GROUP BY e.Employee_ID";
+        		
+        m_queryArray.add(new QueryData(EMP_HOURS_NAME, EMP_HOURS, null, null, false, false));   // Query 13
         
-        m_queryArray.add(new QueryData("INSERT INTO Customer(Customer_Name, Customer_Phone_Number, Customer_Email)\n" + 
+        final String RECEIPT_NAME = "Generate receipt for table";
+        m_queryArray.add(new QueryData(RECEIPT_NAME, "call mm_sttest2b.Receipts(?)",new String [] {"TABLE_ID"}, new boolean [] {false}, false, true));   // Receipt Procedure 
+        
+        String NEW_CUSTOMER = "Add new customer";
+        m_queryArray.add(new QueryData(NEW_CUSTOMER, "INSERT INTO Customer(Customer_Name, Customer_Phone_Number, Customer_Email)\n" + 
 				   "VALUES (?,?,?);", new String[] {"Customer_Name", "Customer_Phone_Number", "Customer_Email"}, null, true, true)); // Eric testing
         
         // Display all current menu items
-        final String CURRENT_MENU = "SELECT Menu_Product, Prices, " + 
-              "Product_Type, Season, Gluten_Free, Vegetarian FROM Menu_Item " + 
-              "WHERE Active = 1 ORDER BY Product_Type";
-        m_queryArray.add(new QueryData (CURRENT_MENU, null, null, false, 
-              false));
+        final String CURRENT_MENU_NAME = "Current menu items";
+        final String CURRENT_MENU = "SELECT Menu_Item_ID, Menu_Product, " + 
+              "Prices, Product_Type, Season, Gluten_Free, Vegetarian " + 
+              "FROM Menu_Item WHERE Active = 1 ORDER BY Product_Type";
+        m_queryArray.add(new QueryData (CURRENT_MENU_NAME, CURRENT_MENU, null, 
+              null, false, false));
         
         // Display gluten free and vegetarian menu items:
+        final String GF_VEG_NAME = "Gluten free and vegetarian menu items";
         final String GF_VEG_MENU = 
-              "SELECT Menu_Product, Prices, Product_Type, " + 
+              "SELECT Menu_Item_ID, Menu_Product, Prices, Product_Type, " + 
               "Gluten_Free, Vegetarian FROM Menu_Item WHERE Gluten_Free = 1 " + 
               "OR Vegetarian = 1 AND Active = 1;";
-        m_queryArray.add(new QueryData (GF_VEG_MENU, null, null, false, 
-              false));
+        m_queryArray.add(new QueryData (GF_VEG_NAME, GF_VEG_MENU, null, null, 
+              false, false));
         
         // Most ordered menu items:
+        final String MOST_ORDERED_NAME = "Most ordered menu items";
         final String MOST_ORDERED_ITEMS = "SELECT Menu_Product AS" +
               " 'Most ordered menu items', SUM(Order_Menu_Item_Quantity) AS " + 
               "'orders' FROM Menu_Item JOIN Order_Menu_Item " + 
               "ON Order_Menu_Item.Menu_Item_ID = Menu_Item.Menu_Item_ID " +
               "GROUP BY Menu_Product ORDER BY COUNT(*) DESC, Menu_Product" + 
               " LIMIT 20;";
-        m_queryArray.add(new QueryData (MOST_ORDERED_ITEMS, null, null, false, 
-              false));
+        m_queryArray.add(new QueryData (MOST_ORDERED_NAME, MOST_ORDERED_ITEMS, 
+              null, null, false, false));
         
         
         // Update table to indicate order is completed and table is now open
+        final String UPDATE_TABLE_NAME = "Complete order and clear table";
         final String UPDATE_TABLE = "call mm_sttest2b.Order_Completed(?);";
-        m_queryArray.add(new QueryData (UPDATE_TABLE, new String [] 
+        m_queryArray.add(new QueryData (UPDATE_TABLE_NAME, UPDATE_TABLE, new String [] 
               {"Table_Number"}, new boolean[] {false},  false, true));
         
-        
-        	/*
-            Note: test with table 10. After testing, use this script to reset 
-            values (so table 10 can be used for testing again):
-               update List_Of_Orders
-               Set Completed = 0
-               WHERE Table_ID = 10;
-               Update List_of_Tables
-               Set Occupied = True
-               Where Table_ID = 10;
-         	*/
-        	
+        /*
+        Note: test with table 10. After testing, use this script to reset 
+        values (so table 10 can be used for testing again):
+           update List_Of_Orders.
+           Set Completed = 0
+           WHERE Table_ID = 10;
+           Update List_of_Tables
+           Set Occupied = True
+           Where Table_ID = 10;
+     */
+    
         // Quantity of all produce items in stock
-        final String PRODUCE_ITEMS = "SELECT * FROM Ingredients WHERE " + 
-              "Ingredient_Type = 'produce' ORDER BY Ingredient_Total_Qty DESC;";
-        m_queryArray.add(new QueryData(PRODUCE_ITEMS, null, null, false, false));   
-        
+        final String INGREDIENTS_NAME = "Quantity of all ingredients in stock";
+        final String INGREDIENTS = "SELECT * FROM Ingredients ORDER BY Ingredient_Total_Qty DESC;";
+        m_queryArray.add(new QueryData(INGREDIENTS_NAME, INGREDIENTS, null, null, false, false));  
+
         
      // Update table to indicate order is completed and table is now open
+        final String INSERT_ORDER_NAME = "Add a new order";
         final String INSERT_ORDER = "call mm_sttest2b.Insert_Order(?, ?, ?, ?, ?);";
-        m_queryArray.add(new QueryData (INSERT_ORDER, 
+        m_queryArray.add(new QueryData (INSERT_ORDER_NAME, INSERT_ORDER, 
         		new String [] {"Employee", "TableID", "Notes", "Menu_Item_Id", "Quantity"}, 
         		new boolean[] {false, false, false, false, false},  false, true));
-    
+
     }
        
 
@@ -186,6 +197,10 @@ public class QueryRunner {
         return e.IsQueryParm();
     }
     
+    public String getName(int queryChoice)
+    {
+       return (m_queryArray.get(queryChoice)).getQueryName();
+    }
      
     public boolean ExecuteQuery(int queryChoice, String [] parms)
     {

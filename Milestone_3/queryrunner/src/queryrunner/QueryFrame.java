@@ -28,6 +28,8 @@ public class QueryFrame extends javax.swing.JFrame {
  * @param queryrunnerObj 
  */
     public QueryFrame(QueryRunner queryrunnerObj) {
+   getContentPane().setBackground(new Color(240, 255, 240));
+   getContentPane().setForeground(new Color(240, 255, 240));
         initComponents();
         m_parmlabels = new JLabel[]{jLabel1, jLabel2, jLabel3, jLabel4, jLabel9, jLabel10, jLabel11, jLabel12};        
         m_textvals = new JTextField[] { jTextField5, jTextField6,jTextField7,jTextField8,jTextField9,jTextField10,jTextField11,jTextField12};
@@ -38,7 +40,8 @@ public class QueryFrame extends javax.swing.JFrame {
 
         for (int i=0; i < nAmt; i++)
         {
-            this.jComboBox1.addItem("Query " + (i+1));
+ //           this.jComboBox1.addItem("Query " + (i+1));
+           this.jComboBox1.addItem((i + 1) + ": " + m_queryrunner.getName(i));
         }
         jComboBox1.setEnabled(false);
         jButton2.setEnabled(false);
@@ -67,6 +70,7 @@ public class QueryFrame extends javax.swing.JFrame {
         jTextField3 = new javax.swing.JTextField();
         jTextField3.setText("mm_sttest2b");
         jPanel1 = new javax.swing.JPanel();
+        jPanel1.setBackground(new Color(240, 255, 255));
         jTextField5 = new javax.swing.JTextField();
         jTextField6 = new javax.swing.JTextField();
         jTextField7 = new javax.swing.JTextField();
@@ -84,6 +88,7 @@ public class QueryFrame extends javax.swing.JFrame {
         jTextField11 = new javax.swing.JTextField();
         jTextField12 = new javax.swing.JTextField();
         jPanel2 = new javax.swing.JPanel();
+        jPanel2.setBackground(new Color(240, 248, 255));
         jComboBox1 = new javax.swing.JComboBox<>();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -142,7 +147,7 @@ public class QueryFrame extends javax.swing.JFrame {
         jLabel3.setToolTipText("");
         jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(652, 29, 115, -1));
 
-        jLabel4.setBackground(new java.awt.Color(204, 255, 255));
+        jLabel4.setBackground(new Color(240, 248, 255));
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel4.setText("aaa");
         jLabel4.setToolTipText("");
@@ -286,8 +291,10 @@ public class QueryFrame extends javax.swing.JFrame {
         
         jTextArea2.setText("");
         String szChoice = (String)jComboBox1.getSelectedItem();        
-        String szStripChoice = szChoice.substring(6);
-        m_queryChoice = Integer.parseInt(szStripChoice)-1;        
+ //       String szStripChoice = szChoice.substring(6);
+//        m_queryChoice = Integer.parseInt(szStripChoice)-1;   //FIXME currently, this will only work for 9 queries    
+        m_queryChoice = Integer.parseInt(szChoice.substring(0, 1)) - 1;
+        
         String szQuery = m_queryrunner.GetQueryText(m_queryChoice);
         this.jTextArea1.setText(szQuery);
         System.out.println("choice is " + szChoice);
