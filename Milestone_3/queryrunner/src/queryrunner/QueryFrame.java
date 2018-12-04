@@ -292,8 +292,8 @@ public class QueryFrame extends javax.swing.JFrame {
         jTextArea2.setText("");
         String szChoice = (String)jComboBox1.getSelectedItem();        
  //       String szStripChoice = szChoice.substring(6);
-//        m_queryChoice = Integer.parseInt(szStripChoice)-1;   //FIXME currently, this will only work for 9 queries    
-        m_queryChoice = Integer.parseInt(szChoice.substring(0, 1)) - 1;
+//        m_queryChoice = Integer.parseInt(szStripChoice)-1;
+        m_queryChoice = extractQueryNumber(szChoice) - 1;
         
         String szQuery = m_queryrunner.GetQueryText(m_queryChoice);
         this.jTextArea1.setText(szQuery);
@@ -324,6 +324,19 @@ public class QueryFrame extends javax.swing.JFrame {
         }
         
     }//GEN-LAST:event_jComboBox1ActionPerformed
+    
+    // Helper method to parse int from query description on pull down menu
+    private int extractQueryNumber(String queryDesc)
+    {
+       StringBuilder sb = new StringBuilder();
+       for (int i = 0; i < queryDesc.length(); i++)
+       {
+          char c = queryDesc.charAt(i);
+          if (Character.isDigit(c))
+             sb.append(c);
+       }
+       return Integer.parseInt(sb.toString());
+    }
 
     
 /**
