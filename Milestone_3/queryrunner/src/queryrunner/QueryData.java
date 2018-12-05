@@ -1,11 +1,9 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Restaurant Solutions (Group 2)
+ * Celeste Broderick, Pabi Dhaliwal, Eric Nunn, Fang (Jenny) Yuan
+ * CPSC 5021, Seattle University
  */
 package queryrunner;
-
-import java.util.ArrayList;
 
 /**
  *
@@ -15,28 +13,16 @@ public class QueryData {
      QueryData()
     {
     }
-//    QueryData(String query)
-//    {
-//        m_queryString = query;
-//    }
     
     QueryData(String name, String query, String[] parms, boolean [] likeparms, boolean isAction, boolean isParm)
     {
-        m_queryName = name;
+        m_queryName = name;   // name of query
         m_queryString = query;
         m_arrayParms = parms;
         m_arrayLikeParms = likeparms;
         m_isAction = isAction;
         m_isParms = isParm;        
     }
-    
-//    void Set(String query, ArrayList<String>parms, boolean isAction, boolean isParm)
-//    {
-//        m_queryString = query;
-//        m_arrayParms = parms;
-//        m_isAction = isAction;
-//        m_isParms = isParm;
-//    }
     
     String getQueryName()
     {
