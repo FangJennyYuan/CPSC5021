@@ -10,7 +10,7 @@ import java.io.*;
  * QueryWriter class provides static methods that can be used to export
  * query results to a csv file.
  * 
- * @author Restaurant Solutions:
+ * @author Restaurant Solutions (Group 2)
  * Celeste Broderick, Pabi Dhaliwal, Eric Nunn, Fang (Jenny) Yuan
  */
 public class QueryWriter
