@@ -336,43 +336,53 @@ public class QueryRunner {
                 // functions directly, you can choose to do that. It will be harder, but that is your option.
                 // NOTE - You can look at the QueryRunner API calls that are in QueryFrame.java for assistance. You should not have to 
                 //    alter any code in QueryJDBC, QueryData, or QueryFrame to make this work.
-
             	
-            	System.out.print("Please enter the Host Name: ");
             	Scanner input = new Scanner(System.in);
-            	String hostName = input.nextLine();
-            	System.out.print("Please enter the User Name: ");
-            	String username = input.nextLine();
-            	System.out.print("Please enter the Password Name: ");
-            	String password = input.nextLine();
-            	System.out.print("Please enter the Database Name: ");
-            	String database = input.nextLine();
+            	String hostName = "";
+            	String username = "";
+            	String password = "";
+            	String database = "";
+            	boolean validate;
+            	validate = queryrunner.Connect(hostName, username, password, database);
+            	do {
+            		//Log-in
+            		System.out.println("How would you like to log in? ");
+            		System.out.println("1. Default log in (mm_sttest2b)");
+            		System.out.println("2. Enter log in");
+            		System.out.print("Enter(1 or 2): ");
+            		String loginType = input.nextLine();
+            		if (loginType.equals("1")) {
+            			hostName = "cssql.seattleu.edu";
+            			username = "mm_sttest2b";
+            			password = "mm_sttest2bPass";
+            			database = "mm_sttest2b";
+            			/*
+                	hostName = "127.0.0.1";
+                	username = "test";
+                	password = "test";
+                	database = "mm_sttest2b";
+            			 */
+            		}else {
+            			System.out.print("Please enter the Host Name: ");
+            			hostName = input.nextLine();
+            			System.out.print("Please enter the User Name: ");
+            			username = input.nextLine();
+            			System.out.print("Please enter the Password Name: ");
+            			password = input.nextLine();
+            			System.out.print("Please enter the Database Name: ");
+            			database = input.nextLine();
+            		}
+            	}while(validate);
             	
             	
-            	hostName = "cssql.seattleu.edu";
-            	username = "mm_sttest2b";
-            	password = "mm_sttest2bPass";
-            	database = "mm_sttest2b";
-				
-            	/*
-            	hostName = "127.0.0.1";
-            	username = "test";
-            	password = "test";
-            	database = "mm_sttest2b";
-            	*/
-            	
-            	boolean validate = queryrunner.Connect(hostName, username, password, database);
             	
             	if (validate) {
-            		
             		System.out.println("You are loged in!\n");
-            	}
-            	else {
+            	}else {
             		String error = queryrunner.GetError();
             		System.out.print("Returned an error " + error);
             		return;
             		//System.out.println("Do you want to try again? ");
-            		
             	}
             	
             	int n = queryrunner.GetTotalQueries();
