@@ -316,116 +316,70 @@ public class QueryRunner {
                 // functions directly, you can choose to do that. It will be harder, but that is your option.
                 // NOTE - You can look at the QueryRunner API calls that are in QueryFrame.java for assistance. You should not have to 
                 //    alter any code in QueryJDBC, QueryData, or QueryFrame to make this work.
-
             	
-            	System.out.print("Please enter the Host Name: ");
             	Scanner input = new Scanner(System.in);
-            	String hostName = input.nextLine();
-            	System.out.print("Please enter the User Name: ");
-            	String username = input.nextLine();
-            	System.out.print("Please enter the Password Name: ");
-            	String password = input.nextLine();
-            	System.out.print("Please enter the Database Name: ");
-            	String database = input.nextLine();
-            	
-            	
-            	hostName = "cssql.seattleu.edu";
-            	username = "mm_sttest2b";
-            	password = "mm_sttest2bPass";
-            	database = "mm_sttest2b";
-				
-            	/*
-            	hostName = "127.0.0.1";
-            	username = "test";
-            	password = "test";
-            	database = "mm_sttest2b";
-            	*/
-            	
-            	boolean validate = queryrunner.Connect(hostName, username, password, database);
-            	
-            	if (validate) {
-            		
-            		System.out.println("You are logged in!\n");
-            	}
-            	else {
-            		String error = queryrunner.GetError();
-            		System.out.print("Returned an error " + error);
-            		return;
-            		//System.out.println("Do you want to try again? ");
-            		
-            	}
-            	
-            	int n = queryrunner.GetTotalQueries();
-            	for (int i = 0; i < n; i++) {
-            		String [] parmArray={};
-            		boolean isParameterQuery = queryrunner.isParameterQuery(i);
-            		boolean execute = false;
-            		boolean isActionQuery = queryrunner.isActionQuery(i);
-            		
-            		// display query name
-                  System.out.println(queryrunner.getName(i));
-                  System.out.println();
-        		
-            		// parameter query - get parameters from user
-            		if (isParameterQuery) {
-            			//System.out.println("Parameter Query: ");
-            			int paramAmount = queryrunner.GetParameterAmtForQuery(i);
-            			parmArray = new String[paramAmount];
-            			for (int k = 0; k < paramAmount ; k++) {
-            				System.out.print(queryrunner.GetParamText(i, k) + ": ");
-            				String parmval = input.nextLine();
-            				parmArray[k] = parmval.trim();
-            			}
-            			
-            		}else {
-  //          			System.out.println("This is a non paramter query");
+            	String hostName = "";
+            	String username = "";
+            	String password = "";
+            	String database = "";
+            	boolean validate;
+            	do {
+            		//Log-in
+            		System.out.println("How would you like to log in? (q for quit) ");
+            		System.out.println("1. Default log in (mm_sttest2b)");
+            		System.out.println("2. Enter log in");
+            		System.out.print("Enter(1 or 2): ");
+            		String loginType = input.nextLine();
+            		if (loginType.equals("q")) {
+            			System.out.println("Terminated");
+            			System.exit(0);
             		}
-            			
-            		// action query - prints how many rows were affected
-            		if (isActionQuery) {
-            			execute = queryrunner.ExecuteUpdate(i, parmArray);
-            			if (execute) {
-            				System.out.println("Rows affected = " + queryrunner.GetUpdateAmount());
-            			}
-            			else {
-            				String error = queryrunner.GetError();
-                    		System.out.print("Returned an error " + error);
-            			}
-            			System.out.println();
-            			
-            		// query returning results
+            		if (loginType.equals("1")) {
+            			hostName = "cssql.seattleu.edu";
+            			username = "mm_sttest2b";
+            			password = "mm_sttest2bPass";
+            			database = "mm_sttest2b";
+
             		}else {
-            			execute = queryrunner.ExecuteQuery(i, parmArray);
-            			if (execute){
-            				String dataHeader[] = queryrunner.GetQueryHeaders();
-            				String data[][] = queryrunner.GetQueryData();
-//            				System.out.println("The result of Query " + (i+1) + ": ");
-            				
-            				for (int j=0; j<dataHeader.length; j++) {
-            					System.out.printf("%-20s", dataHeader[j]);
-            				}
-            				
-            				System.out.println();
-            				
-            				for (int row=0; row<data.length; row++) {
-            					for (int col=0; col<dataHeader.length; col++) {
-            						System.out.printf("%-20s", data[row][col]);
-            					}
-            					System.out.println();
-            				}
-            				
-                        // ask user if they would like to export csv
-                        csvExport(input, dataHeader, data);
-            				
-            				System.out.println();
-            			}else {
-        				String error = queryrunner.GetError();
-                		System.out.print("Returned an error " + error);
-            			}
+            			System.out.print("Please enter the Host Name: ");
+            			hostName = input.nextLine();
+            			System.out.print("Please enter the User Name: ");
+            			username = input.nextLine();
+            			System.out.print("Please enter the Password Name: ");
+            			password = input.nextLine();
+            			System.out.print("Please enter the Database Name: ");
+            			database = input.nextLine();
             		}
             		
-            	}
+            		validate = queryrunner.Connect(hostName, username, password, database);
+            		if (validate) {
+                		System.out.println("You are loged in!");
+                	}else {
+                		String error = queryrunner.GetError();
+                		System.out.println("Incorrect log in!");
+                		System.out.println("Returned an error " + error);
+                	}
+            		
+
+                	
+            	}while(!validate);
             	
+            	int executeQuery;
+            	do {
+            		System.out.println("\nWhich query would you like to run? (-1 to quit)\n");
+            		int n = queryrunner.GetTotalQueries();
+            		for (int i=0; i<n; i++) {
+            			String[] arrayName = new String[n];
+            			arrayName[i] = queryrunner.getName(i);
+            			System.out.println(i+1 + ". " + arrayName[i]);
+            		}
+            		System.out.print("\nEnter: ");
+            		executeQuery = input.nextInt();
+            		
+            		if (executeQuery < n+1  && executeQuery>-1)
+            			executeSelectedQuery(executeQuery-1, queryrunner);
+            	} while (executeQuery != -1);
+    	
             	System.out.println();
             	validate = queryrunner.Disconnect();
             	if (validate) {
@@ -445,6 +399,71 @@ public class QueryRunner {
         }
 
     }    
+    
+    private static void executeSelectedQuery(int i, QueryRunner queryrunner) {
+    	String [] parmArray={};
+		boolean isParameterQuery = queryrunner.isParameterQuery(i);
+		boolean execute = false;
+		boolean isActionQuery = queryrunner.isActionQuery(i);
+		Scanner input = new Scanner(System.in);
+		// display query name
+		System.out.println("\n" + queryrunner.getName(i));
+		System.out.println();
+	
+		if (isParameterQuery) {
+			//System.out.println("Parameter Query: ");
+			int paramAmount = queryrunner.GetParameterAmtForQuery(i);
+			parmArray = new String[paramAmount];
+			for (int k = 0; k < paramAmount ; k++) {
+				System.out.print(queryrunner.GetParamText(i, k) + ": ");
+				String parmval = input.nextLine();
+				parmArray[k] = parmval.trim();
+			}
+			
+		}
+		// action query - prints how many rows were affected
+		if (isActionQuery) {
+			execute = queryrunner.ExecuteUpdate(i, parmArray);
+			if (execute) {
+				System.out.println("Rows affected = " + queryrunner.GetUpdateAmount());
+			}
+			else {
+				String error = queryrunner.GetError();
+        		System.out.print("Returned an error " + error);
+			}
+			System.out.println();
+			
+		// query returning results
+		}else {
+			execute = queryrunner.ExecuteQuery(i, parmArray);
+			if (execute){
+				String dataHeader[] = queryrunner.GetQueryHeaders();
+				String data[][] = queryrunner.GetQueryData();
+//				System.out.println("The result of Query " + (i+1) + ": ");
+				
+				for (int j=0; j<dataHeader.length; j++) {
+					System.out.printf("%-20s", dataHeader[j]);
+				}
+				
+				System.out.println();
+				
+				for (int row=0; row<data.length; row++) {
+					for (int col=0; col<dataHeader.length; col++) {
+						System.out.printf("%-20s", data[row][col]);
+					}
+					System.out.println();
+				}
+				
+            // ask user if they would like to export csv
+            csvExport(input, dataHeader, data);
+				
+				System.out.println();
+			}else {
+			String error = queryrunner.GetError();
+    		System.out.print("Returned an error " + error);
+			}
+		}
+    }
     
     // helper method to assist in exporting csv in console version
     private static void csvExport(Scanner input, String[] dataHeader, 
